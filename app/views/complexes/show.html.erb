@@ -1,0 +1,18 @@
+<p>
+  <b>Title:</b>
+  <%=h @complex.title %>
+</p>
+
+<p>
+  <b>Created by:</b>
+  <%=h @complex.created_by %>
+</p>
+
+<p>
+  <b>Modified by:</b>
+  <%=h @complex.modified_by %>
+</p>
+
+
+<%= link_to 'Edit', edit_complex_path(@complex) %> |
+<%= link_to 'Back', complexes_path %>

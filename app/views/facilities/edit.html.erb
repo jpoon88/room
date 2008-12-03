@@ -1,0 +1,28 @@
+<h1>Editing facility</h1>
+
+<% form_for(@facility) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :complex_id %><br />
+    <%= f.text_field :complex_id %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :created_by %><br />
+    <%= f.text_field :created_by %>
+  </p>
+  <p>
+    <%= f.label :modified_by %><br />
+    <%= f.text_field :modified_by %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @facility %> |
+<%= link_to 'Back', facilities_path %>

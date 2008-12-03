@@ -1,0 +1,24 @@
+<h1>Listing complexes</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Created by</th>
+    <th>Modified by</th>
+  </tr>
+
+<% for complex in @complexes %>
+  <tr>
+    <td><%=h complex.title %></td>
+    <td><%=h complex.created_by %></td>
+    <td><%=h complex.modified_by %></td>
+    <td><%= link_to 'Show', complex %></td>
+    <td><%= link_to 'Edit', edit_complex_path(complex) %></td>
+    <td><%= link_to 'Destroy', complex, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New complex', new_complex_path %>

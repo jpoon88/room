@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  complex_id: 1
+  title: MyString
+  created_by: 1
+  modified_by: 1
+
+two:
+  complex_id: 1
+  title: MyString
+  created_by: 1
+  modified_by: 1

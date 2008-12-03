@@ -1,0 +1,26 @@
+<h1>Listing facilities</h1>
+
+<table>
+  <tr>
+    <th>Complex</th>
+    <th>Title</th>
+    <th>Created by</th>
+    <th>Modified by</th>
+  </tr>
+
+<% for facility in @facilities %>
+  <tr>
+    <td><%=h facility.complex_id %></td>
+    <td><%=h facility.title %></td>
+    <td><%=h facility.created_by %></td>
+    <td><%=h facility.modified_by %></td>
+    <td><%= link_to 'Show', facility %></td>
+    <td><%= link_to 'Edit', edit_facility_path(facility) %></td>
+    <td><%= link_to 'Destroy', facility, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New facility', new_facility_path %>
