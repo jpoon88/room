@@ -1,11 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  title: MyString
+  id: 1
+  title: BAYVIEW ELEMENTARY 
   created_by: 1
   modified_by: 1
 
 two:
-  title: MyString
+  id: 2
+  title: BEACONSFIELD ELEMENTARY
   created_by: 1
   modified_by: 1
