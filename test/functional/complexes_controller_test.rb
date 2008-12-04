@@ -28,9 +28,6 @@ class ComplexesControllerTest < ActionController::TestCase
 
     expected_complex = Complex.new(complex_hash)
     new_complex = Complex.find(:all, :order => "id DESC", :limit => 1)[0]
-    expected_complex[:id] = new_complex[:id]
-    expected_complex[:created_at] = new_complex[:created_at]
-    expected_complex[:updated_at] = new_complex[:updated_at]
     assert_equal(expected_complex, new_complex)
 
     assert_redirected_to complex_path(assigns(:complex))
@@ -47,8 +44,12 @@ class ComplexesControllerTest < ActionController::TestCase
   end
 
   def test_should_update_complex
-    put :update, :id => complexes(:one).id, :complex => { }
+   
+    put :update, :id => complexes(:one).id, :complex => { :title => "Bayview Elementary (new)" }
     assert_redirected_to complex_path(assigns(:complex))
+    actual = Complex.find(1)
+    assert_equal("Bayview Elementary (new)", actual.title)
+    
   end
 
   def test_should_destroy_complex
@@ -58,4 +59,7 @@ class ComplexesControllerTest < ActionController::TestCase
 
     assert_redirected_to complexes_path
   end
+  
+
+  
 end

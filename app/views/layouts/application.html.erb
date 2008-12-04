@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%= params[:controller] %> - <%= controller.action_name %></title>
+  <%= stylesheet_link_tag 'scaffold' %>
+</head>
+<body>
+<% menu_sidebar.items.each do |item| %>
+<li>
+<%= link_to_unless_current item.caption, item.option_hash do |name|
+	content_tag :span, name, :class=> "current_item"
+	end %>
+</li>
+<% end %>
+
+<ul>
+	<li>
+	<%= link_to_unless_current "Complexes",
+		complexes_path, 
+		:class => 'current' %>
+	</li>
+	<li>
+	<%= link_to_unless_current "Facilities", facilities_path, :class => 'test'  %>
+	</li>
+</ul>
+
+<p style="color: green"><%= flash[:notice] %></p>
+
+<%= yield  %>
+
+</body>
+</html>
