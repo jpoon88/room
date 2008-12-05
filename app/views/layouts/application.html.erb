@@ -8,6 +8,9 @@
   <%= stylesheet_link_tag 'scaffold' %>
 </head>
 <body>
+
+
+	
 <% menu_sidebar.items.each do |item| %>
 <li>
 <%= link_to_unless_current item.caption, item.option_hash do |name|

@@ -1,0 +1,39 @@
+body {
+font-family: lucida grande,verdana,sans-serif;
+font-size: 12px;
+text-align: center;
+background-color: #f0f0f0;
+}
+
+# Login pages
+
+.login {
+margin: 20px auto 0;
+width: 500px;
+background: #FFFFFF none repeat scroll 0 0;
+border: 10px solid #CCCCCC;
+
+}
+.login dl {
+	text-align: left;
+	margin-left: 50px;
+	
+}
+.login dt {
+	clear:right;
+	float:left; 
+	font-size:14px;
+	font-weight:normal;
+	line-height:24px;
+	width:80px;
+}
+.login dd {
+	color:#666666;
+	font-size:11px;
+	line-height:24px;
+	margin:0 0 5px 85px;
+  
+}
+.login input {
+font-size:14px;
+}

@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration
   def self.up
-    create_table "users", :options => "ENGINE=MyISAM", :force => true do |t|
+    create_table "users", :force => true do |t|    # ,:options => "ENGINE=MyISAM"
       t.column :login,                     :string
       t.column :email,                     :string
       t.column :crypted_password,          :string, :limit => 40

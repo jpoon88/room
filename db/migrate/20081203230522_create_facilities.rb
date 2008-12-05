@@ -1,6 +1,6 @@
 class CreateFacilities < ActiveRecord::Migration
   def self.up
-    create_table :facilities, :options => "ENGINE=MyISAM"  do |t|
+    create_table :facilities  do |t|   # ,:options => "ENGINE=MyISAM"
       t.integer :complex_id
       t.string :title
       t.integer :created_by
