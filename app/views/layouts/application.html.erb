@@ -9,7 +9,16 @@
 </head>
 <body>
 
+<% if flash[:error] %>
+	  <%=h flash[:error] %>
+<% end %>
 
+<% if session[:user_id] %>
+  Login in as <%= User.find(session[:user_id]).login %> logout
+<% else %>
+  <%= link_to 'login', login_path %>
+
+<% end %>
 	
 <% menu_sidebar.items.each do |item| %>
 <li>

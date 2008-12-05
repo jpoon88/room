@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.home '', :controller => "complexes", :action => 'index'
   map.resources :facilities
   map.resources :complexes
 
@@ -10,6 +11,10 @@ ActionController::Routing::Routes.draw do |map|
   map.login  '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
+  map.open_id_complete 'session', :controller => "sessions", 
+    :action => "create", :requirements => { :method => :get }
+ 
+ 
 
   # The priority is based upon order of creation: first created -> highest priority.
 
