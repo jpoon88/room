@@ -1,0 +1,24 @@
+-
+  - Home
+  - controller: recipes
+    action: home
+-
+  - Recipes
+  - controller: recipes
+    action: index
+-
+  - Categories
+  - controller: recipies
+    action: categories
+-
+  - Authors
+  - controller: recipes
+    action: authors
+-
+  - Community
+  - controller: recipes
+    action: community
+-
+  - Gear
+  - controller: gear
+    action: index

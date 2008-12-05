@@ -12,11 +12,11 @@ class AddOpenIdAuthenticationTables < ActiveRecord::Migration
       t.string :salt, :null => false
     end
     
-    add_column :users, :identify_url, :string
+    add_column :users, :identity_url, :string
   end
 
   def self.down
-    remove_column :users, identity_url
+    remove_column :users, :identity_url
     
     drop_table :open_id_authentication_associations
     drop_table :open_id_authentication_nonces

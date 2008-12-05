@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-
+  skip_before_filter :login_required, :only => [:new, :create]
+  
   # render new.rhtml
   def new
   end

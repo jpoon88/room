@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class ComplexesControllerTest < ActionController::TestCase
+
+  def setup
+      @request.session[:user_id] = 1
+  end
+  
   def test_should_get_index
     get :index
     assert_response :success

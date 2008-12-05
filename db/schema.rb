@@ -38,9 +38,9 @@ ActiveRecord::Schema.define(:version => 20081205052645) do
   end
 
   create_table "open_id_authentication_nonces", :force => true do |t|
-    t.integer "timestamp",  :null => false
+    t.integer "timestamp",  :default => 0,  :null => false
     t.string  "server_url"
-    t.string  "salt",       :null => false
+    t.string  "salt",       :default => "", :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(:version => 20081205052645) do
     t.datetime "updated_at"
     t.string   "remember_token"
     t.datetime "remember_token_expires_at"
-    t.string   "identify_url"
+    t.string   "identity_url"
   end
 
 end

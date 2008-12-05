@@ -1,5 +1,6 @@
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
+  skip_before_filter :login_required, :only => [:new, :create]
 
   # render new.rhtml
   def new
@@ -24,12 +25,12 @@ class SessionsController < ApplicationController
   protected
   
   def open_id_authentication(openid_url)
-    authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
+    authenticate_with_open_id(openid_url, :required => [:nickname, :email], :optional => :fullname ) do |result, identity_url, registration|
       if result.successful?
         @user = User.find_or_initialize_by_identity_url(identity_url)
         if @user.new_record?
-          @user.login = registration['nickname']
-          @user.email = registration['email']
+          @user.login = registration['nickname'] || identity_url
+          @user.email = registration['email'] 
           @user.save(false)
         end
         self.current_user = @user
@@ -38,6 +39,7 @@ class SessionsController < ApplicationController
         failed_login result.message
       end
     end
+
   end
   
   

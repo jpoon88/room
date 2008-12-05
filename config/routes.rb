@@ -1,21 +1,19 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.home '', :controller => "complexes", :action => 'index'
-  map.resources :facilities
-  map.resources :complexes
 
-  map.resources :users
+  map.open_id_complete 'session', :controller => "sessions", 
+    :action => "create", :requirements => { :method => :get }
   map.resource :session
+  map.resources :users
   
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login  '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
 
-  map.open_id_complete 'session', :controller => "sessions", 
-    :action => "create", :requirements => { :method => :get }
+  map.resources :facilities
+  map.resources :complexes
  
- 
-
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

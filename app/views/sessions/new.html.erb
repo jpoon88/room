@@ -1,3 +1,12 @@
+<div>
+<% if flash[:error] %>
+	  <%=h flash[:error] %>
+<% end %>
+<% if flash[:notice] %>
+  <%=h flash[:notice] %>
+<% end %>  
+</div>
+
 <% form_tag session_path do -%>
 <p><label for="login">Login</label><br/>
 <%= text_field_tag 'login' %></p>

@@ -9,12 +9,10 @@
 </head>
 <body>
 
-<% if flash[:error] %>
-	  <%=h flash[:error] %>
-<% end %>
-
 <% if session[:user_id] %>
-  Login in as <%= User.find(session[:user_id]).login %> logout
+  Login in as <%= User.find(session[:user_id]).login %>
+   <%= session[:user_id] %>
+  <%= link_to 'Logout', logout_path %>
 <% else %>
   <%= link_to 'login', login_path %>
 
