@@ -1,0 +1,64 @@
+<h1>Editing district</h1>
+
+<% form_for(@district) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :code %><br />
+    <%= f.text_field :code %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :mailing_address %><br />
+    <%= f.text_field :mailing_address %>
+  </p>
+  <p>
+    <%= f.label :mailing_city %><br />
+    <%= f.text_field :mailing_city %>
+  </p>
+  <p>
+    <%= f.label :mailing_province %><br />
+    <%= f.text_field :mailing_province %>
+  </p>
+  <p>
+    <%= f.label :mailing_postal %><br />
+    <%= f.text_field :mailing_postal %>
+  </p>
+  <p>
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </p>
+  <p>
+    <%= f.label :city %><br />
+    <%= f.text_field :city %>
+  </p>
+  <p>
+    <%= f.label :province %><br />
+    <%= f.text_field :province %>
+  </p>
+  <p>
+    <%= f.label :postal %><br />
+    <%= f.text_field :postal %>
+  </p>
+  <p>
+    <%= f.label :website %><br />
+    <%= f.text_field :website %>
+  </p>
+  <p>
+    <%= f.label :phone %><br />
+    <%= f.text_field :phone %>
+  </p>
+  <p>
+    <%= f.label :fax %><br />
+    <%= f.text_field :fax %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @district %> |
+<%= link_to 'Back', districts_path %>

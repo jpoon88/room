@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081205052645) do
+ActiveRecord::Schema.define(:version => 20081209231718) do
 
   create_table "complexes", :force => true do |t|
     t.string   "title"
@@ -19,9 +19,79 @@ ActiveRecord::Schema.define(:version => 20081205052645) do
     t.datetime "updated_at"
   end
 
+  create_table "contacts", :force => true do |t|
+    t.integer  "school_id"
+    t.integer  "year"
+    t.string   "category"
+    t.string   "title"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.integer  "created_by"
+    t.integer  "modified_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "districts", :force => true do |t|
+    t.string   "code"
+    t.string   "title"
+    t.string   "address"
+    t.string   "city"
+    t.string   "province"
+    t.string   "postal"
+    t.string   "mailing_address"
+    t.string   "mailing_city"
+    t.string   "mailing_province"
+    t.string   "mailing_postal"
+    t.string   "website"
+    t.string   "phone"
+    t.string   "fax"
+    t.integer  "created_by"
+    t.integer  "modified_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "enrollments", :force => true do |t|
+    t.integer  "school_id"
+    t.integer  "year"
+    t.integer  "total"
+    t.integer  "kh_enrollment"
+    t.integer  "kf_enrollment"
+    t.integer  "hs_registration"
+    t.integer  "su_enrollment"
+    t.integer  "eu_enrollment"
+    t.integer  "grade_1"
+    t.integer  "grade_2"
+    t.integer  "grade_3"
+    t.integer  "grade_4"
+    t.integer  "grade_5"
+    t.integer  "grade_6"
+    t.integer  "grade_7"
+    t.integer  "grade_8"
+    t.integer  "grade_9"
+    t.integer  "grade_10"
+    t.integer  "grade_11"
+    t.integer  "grade_12"
+    t.integer  "created_by"
+    t.integer  "modified_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "facilities", :force => true do |t|
     t.integer  "complex_id"
     t.string   "title"
+    t.integer  "created_by"
+    t.integer  "modified_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "grades", :force => true do |t|
+    t.string   "name"
+    t.integer  "school_id"
     t.integer  "created_by"
     t.integer  "modified_by"
     t.datetime "created_at"
@@ -41,6 +111,29 @@ ActiveRecord::Schema.define(:version => 20081205052645) do
     t.integer "timestamp",  :default => 0,  :null => false
     t.string  "server_url"
     t.string  "salt",       :default => "", :null => false
+  end
+
+  create_table "schools", :force => true do |t|
+    t.integer  "district_id"
+    t.string   "code"
+    t.string   "name"
+    t.string   "category"
+    t.string   "funding_group"
+    t.string   "school_type"
+    t.string   "address"
+    t.string   "city"
+    t.string   "province"
+    t.string   "postal"
+    t.string   "mailing_address"
+    t.string   "mailing_city"
+    t.string   "mailing_province"
+    t.string   "mailing_postal"
+    t.string   "phone"
+    t.string   "fax"
+    t.integer  "created_by"
+    t.integer  "modified_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

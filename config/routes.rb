@@ -1,4 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :schools
+
+  map.resources :districts
+
 
   map.home '', :controller => "complexes", :action => 'index'
 

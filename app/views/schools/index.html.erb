@@ -1,0 +1,44 @@
+<h1>Listing schools</h1>
+
+<table>
+  <tr>
+    <th>District</th>
+    <th>Code</th>
+    <th>Name</th>
+    <th>Mailing address</th>
+    <th>Mailing city</th>
+    <th>Mailing province</th>
+    <th>Mailing postal</th>
+    <th>Address</th>
+    <th>City</th>
+    <th>Province</th>
+    <th>Postal</th>
+    <th>Phone</th>
+    <th>Fax</th>
+  </tr>
+
+<% for school in @schools %>
+  <tr>
+    <td><%=h school.district_id %></td>
+    <td><%=h school.code %></td>
+    <td><%=h school.name %></td>
+    <td><%=h school.mailing_address %></td>
+    <td><%=h school.mailing_city %></td>
+    <td><%=h school.mailing_province %></td>
+    <td><%=h school.mailing_postal %></td>
+    <td><%=h school.address %></td>
+    <td><%=h school.city %></td>
+    <td><%=h school.province %></td>
+    <td><%=h school.postal %></td>
+    <td><%=h school.phone %></td>
+    <td><%=h school.fax %></td>
+    <td><%= link_to 'Show', school %></td>
+    <td><%= link_to 'Edit', edit_school_path(school) %></td>
+    <td><%= link_to 'Destroy', school, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New school', new_school_path %>
