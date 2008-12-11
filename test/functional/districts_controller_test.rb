@@ -1,6 +1,12 @@
 require 'test_helper'
 
 class DistrictsControllerTest < ActionController::TestCase
+  fixtures :districts
+  
+  def setup
+      @request.session[:user_id] = 1
+  end
+  
   def test_should_get_index
     get :index
     assert_response :success
@@ -21,23 +27,23 @@ class DistrictsControllerTest < ActionController::TestCase
   end
 
   def test_should_show_district
-    get :show, :id => districts(:one).id
+    get :show, :id => districts('083').id
     assert_response :success
   end
 
   def test_should_get_edit
-    get :edit, :id => districts(:one).id
+    get :edit, :id => districts('083').id
     assert_response :success
   end
 
   def test_should_update_district
-    put :update, :id => districts(:one).id, :district => { }
+    put :update, :id => districts('083').id, :district => { }
     assert_redirected_to district_path(assigns(:district))
   end
 
   def test_should_destroy_district
     assert_difference('District.count', -1) do
-      delete :destroy, :id => districts(:one).id
+      delete :destroy, :id => districts('083').id
     end
 
     assert_redirected_to districts_path

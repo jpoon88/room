@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class FacilitiesControllerTest < ActionController::TestCase
+  fixtures :facilities
   
   def setup
       @request.session[:user_id] = 1
