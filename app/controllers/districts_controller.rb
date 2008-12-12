@@ -1,4 +1,10 @@
 class DistrictsController < ApplicationController
+  skip_before_filter :login_required
+  
+  def map
+    @districts = District.find(:all, :order => ['title' ])
+    render :layout => false
+  end
   # GET /districts
   # GET /districts.xml
   def index
@@ -7,7 +13,16 @@ class DistrictsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @districts }
+      format.js {
+         h = Hash.new;
+         @districts.each { |c| h[c.code] = { 'code' => c.code, 'title' => c.title }  }
+         @some_json = h.to_json
+      }
     end
+    
+
+#result = @districts.map{ |c| { c.id  => { 'code' => c.code, 'title' => c.title } }  }  
+#render :js => '<script> var dist = ' + result.to_json + '</script>'    
   end
 
   # GET /districts/1

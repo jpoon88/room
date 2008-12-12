@@ -1,0 +1,158 @@
+html { overflow: hidden; }
+
+html, body {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+}
+
+body { margin: 0px; }
+
+#content {
+     margin-top: 10px;
+     position: relative;
+}
+
+#map {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+     border: 1px solid #aaa;
+}
+
+#map-wrapper {
+     position: relative;
+     height: 100%;
+}
+
+#sidebar {
+     position: absolute;
+     border: 1px solid #aaa;
+     top: 0;
+     width: 290px;
+     height: 100%;
+     overflow: auto;
+}
+
+#sidebar p {
+     margin: 10px;
+}
+
+#sidebar ul#districts {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+}
+
+#sidebar ul#districts li a {
+     display: block;
+     border: 1px solid #ddd;
+     background: #eee;
+     margin: 5px;
+     padding: 4px;
+     font: 12px Helvetica, sans-serif;
+     text-decoration: none;
+     color: #444;
+}
+
+#sidebar ul#districts li.current a {
+     border: 1px solid #444;
+     border-left-width: 3px;
+     padding-left: 2px;
+}
+
+#sidebar ul#districts li a:hover {
+     background: white;
+     color: #555;
+}
+
+#sidebar ul#districts li a strong {
+     display: block;
+}
+#sidebar ul#districts li a span {
+     font-style: italic;
+     font-size: 11px;
+}
+
+/* The default is the sidebar to show as per these styles 
+for map-wrapper, the sidebar, and the show/hide links */
+#map-wrapper { margin-right: 300px; }
+#sidebar { 
+  right: 0px; 
+  display:block;
+}
+
+#button-sidebar-show {display:none;}
+#button-sidebar-hide {display:block;}
+
+/* When the body class is set to "sidebar off," the following
+styles take effect to 1) hide the sidebar; 2) remove the right margin
+for the map; 3) adjust the visibility of the show/hide links. */
+/*
+body.sidebar-off #sidebar { display: none; }
+body.sidebar-off #map-wrapper { margin-right: 0px; }
+*/
+
+#toolbar {
+     background: white;
+     padding: 4px;
+     border: 1px solid black;
+     position: relative;
+}
+/* holly hack for IE to get position:bottom right 
+   see: http://www.positioniseverything.net/abs_relbugs.html
+\*/
+* html #toolbar { height: 1px; }
+/* */
+
+#toolbar h1 {
+     margin: 0;
+     font: bold 18px Helvetica, sans-serif;
+}
+
+#toolbar ul {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+}
+
+#toolbar ul#sidebar-controls {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+}
+
+#toolbar ul li {
+     display: inline;
+}
+
+#toolbar ul li a {
+     padding: 3px 6px;
+     color: #444;
+     text-decoration: none;
+     font-size: 12px;
+}
+
+#toolbar ul li a:hover {
+     color: #aaa;
+     background: #444;
+}
+
+#alert {
+     position: absolute;
+     top: 50%;
+     left: 0;
+     width: 100%;
+     text-align: center;   
+     display: none;
+}
+
+#alert p {
+     width: 150px;
+     margin: 0 auto 0 auto;
+     padding: 10px;
+     background: white;
+     border: 1px solid #aaa;
+}
