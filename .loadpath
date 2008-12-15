@@ -3,4 +3,7 @@
 	<pathentry path="" type="src"/>
 	<pathentry path="org.rubypeople.rdt.launching.RUBY_CONTAINER" type="con"/>
 	<pathentry path="GEM_LIB/rails-2.1.2/lib" type="var"/>
+	<pathentry path="GEM_LIB/mocha-0.9.3/lib" type="var"/>
+	<pathentry path="GEM_LIB/activesupport-2.1.2/lib" type="var"/>
+	<pathentry path="GEM_LIB/ruby-openid-2.1.2/lib" type="var"/>
 </loadpath>

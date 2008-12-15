@@ -32,13 +32,20 @@ $(document).ready(function(){
 	
 		if ($('#sidebar').is(':visible')) { 
 			
+			$('#sidebar').animate({width:'hide'});
+			$('#map-wrapper').css( {'margin-right': '0px'} );			
 /*			$('body').addClass('sidebar-off'); */
-			$('#sidebar').hide('slow');
-			$('#map-wrapper').css( {'margin-right': '0px'} )
+/*			$('#sidebar').hide('slow');
+
+*/			
 		} else {
+			$('#sidebar').animate({width:'show'});
+			$('#map-wrapper').css( {'margin-right': '300px'} );					
+/*
 			$('#sidebar').show('slow');			
 			$('#map-wrapper').css( {'margin-right': '300px'} ).show('slow')			
-/*			$('body').removeClass('sidebar-off'); */
+			$('body').removeClass('sidebar-off'); 
+*/			
 		}
 	});
 		
