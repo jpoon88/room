@@ -1,7 +1,8 @@
 require 'test_helper'
 
 class ComplexesControllerTest < ActionController::TestCase
-
+  fixtures :complexes
+  
   def setup
       @request.session[:user_id] = 1
   end

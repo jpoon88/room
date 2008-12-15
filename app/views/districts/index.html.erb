@@ -1,0 +1,44 @@
+<h1>Listing districts</h1>
+
+<table>
+  <tr>
+    <th>Code</th>
+    <th>Title</th>
+    <th>Mailing address</th>
+    <th>Mailing city</th>
+    <th>Mailing province</th>
+    <th>Mailing postal</th>
+    <th>Address</th>
+    <th>City</th>
+    <th>Province</th>
+    <th>Postal</th>
+    <th>Website</th>
+    <th>Phone</th>
+    <th>Fax</th>
+  </tr>
+
+<% for district in @districts %>
+  <tr>
+    <td><%=h district.code %></td>
+    <td><%=h district.title %></td>
+    <td><%=h district.mailing_address %></td>
+    <td><%=h district.mailing_city %></td>
+    <td><%=h district.mailing_province %></td>
+    <td><%=h district.mailing_postal %></td>
+    <td><%=h district.address %></td>
+    <td><%=h district.city %></td>
+    <td><%=h district.province %></td>
+    <td><%=h district.postal %></td>
+    <td><%=h district.website %></td>
+    <td><%=h district.phone %></td>
+    <td><%=h district.fax %></td>
+    <td><%= link_to 'Show', district %></td>
+    <td><%= link_to 'Edit', edit_district_path(district) %></td>
+    <td><%= link_to 'Destroy', district, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New district', new_district_path %>

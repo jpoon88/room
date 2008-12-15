@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>Google Maps JavaScript API Example</title>
+
+<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
+        type="text/javascript">
+</script>
+
+<%= javascript_include_tag 'jquery-1.2.6.js' %>
+<%= javascript_include_tag 'jquery-map.js' %>
+<%= stylesheet_link_tag 'style_map' %>
+<script type="text/javascript">
+  var districts = <%= @districts.to_json %>;
+</script>	
+
+
+<script type="text/javascript">
+/*	
+	$(function(){
+		$('#loadButton').click(function(){
+			$.getScript('/javascripts/test.js' //,function(){$('#inspectButton').click()}
+            );
+        });
+	$('#inspectButton').click(function(){
+		someFunction(someVariable);
+	});		
+});
+*/
+</script>
+
+</head>
+<body>
+	<div id="toolbar">
+		<h1>Cell-Tower Locations</h1>
+		<ul id="options">
+			<li><a href="#">Towers</a></li>
+			<li><a href="#">Poles</a></li>
+			<li><a href="#">Masts</a></li>
+			<li><a href="#">Other</a></li>
+		</ul>
+<ul id="sidebar-controls">
+<li><div id='button-sidebar'>show/hide</div></li>
+</ul>			
+		
+	</div>
+
+<div id="content">	
+	<div id="map-wrapper">	
+	    <div id="map"></div>
+	</div>	
+
+    <div id="sidebar">
+    	<ul id='districts'>
+   		<% @districts.each_with_index do |d,i | %>
+		  <li id="<%= dom_id(d) %>"><a href="#"><%=h d.title%> (<%=h d.code%>)</a></li>
+		<% end %>
+    	</ul>
+    </div>
+</div>	
+</body>
+</html>
