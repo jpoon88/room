@@ -5,6 +5,14 @@ class DistrictsController < ApplicationController
     @districts = District.find(:all, :order => ['title' ])
     render :layout => false
   end
+  
+  def map2
+    @stores = Store.find(:all, :order => ['code'])
+    @group = @stores.group_by { |s| s.date_open.year  }
+    
+    render :layout => false
+  end
+  
   # GET /districts
   # GET /districts.xml
   def index

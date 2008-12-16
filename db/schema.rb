@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081210191111) do
+ActiveRecord::Schema.define(:version => 20081216201634) do
 
   create_table "complexes", :force => true do |t|
     t.string   "title"
@@ -138,6 +138,39 @@ ActiveRecord::Schema.define(:version => 20081210191111) do
     t.datetime "updated_at"
     t.decimal  "lat",              :precision => 20, :scale => 14
     t.decimal  "lng",              :precision => 20, :scale => 14
+  end
+
+  create_table "stores", :force => true do |t|
+    t.string   "code"
+    t.string   "name"
+    t.string   "title"
+    t.string   "street_address"
+    t.string   "locality"
+    t.string   "region"
+    t.string   "postal_code"
+    t.string   "phone"
+    t.string   "country"
+    t.string   "url"
+    t.string   "map_url"
+    t.integer  "image_width"
+    t.integer  "image_height"
+    t.string   "image_url"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.boolean  "repair"
+    t.boolean  "sellappletvs"
+    t.boolean  "sellipods"
+    t.boolean  "selliphones"
+    t.boolean  "applestore"
+    t.boolean  "sellmacs"
+    t.string   "concierge"
+    t.decimal  "lat",            :precision => 20, :scale => 14
+    t.decimal  "lng",            :precision => 20, :scale => 14
+    t.date     "date_open"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|

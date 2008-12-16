@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>Google Maps JavaScript API Example</title>
+
+<%= javascript_include_tag 'jquery-1.2.6.js' %>
+<%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
+<%= javascript_include_tag 'jquery.serialScroll-1.2.1-min.js' %>
+<%= javascript_include_tag 'jquery.localscroll-1.2.6-min.js' %>
+<style type="text/css">
+#slider {
+  width: 620px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.scroll {
+  height: 250px;
+  overflow: hidden;
+  position: relative; /* fix for IE to respect overflow */
+  clear: left;
+  background: #FFFFFF url(images/content_pane-gradient.gif) repeat-x scroll left bottom;
+}
+
+.scrollContainer div.panel {
+  padding: 20px;
+  height: 210px;
+  width: 580px; /* change to 560px if not using JS to remove rh.scroll */
+}
+.navigation li {
+	display: inline;
+}
+
+</style>
+
+<script type="text/javascript">
+$(document).ready( function() {
+    var $panels = $("#slider .panel");
+    var $container = $('#slider .scrollContainer');
+
+// if false, we'll float all the panels left and fix the width 
+// of the container
+var horizontal = true;
+
+// float the panels left if we're going horizontal
+if (horizontal) {
+  $panels.css({
+    'float' : 'left',
+    'position' : 'relative' // IE fix to ensure overflow is hidden
+  });
+  
+  // calculate a new width for the container (so it holds all panels)
+  $container.css('width', $panels[0].offsetWidth * $panels.length);
+}
+
+    var $scroll = $('#slider .scroll').css({'overflow':'scroll'});   
+
+
+
+   
+   function trigger() {
+   		console.log(this); 
+		return false;
+	}
+	
+if (window.location.hash) {
+  trigger({ id : window.location.hash.substr(1) });
+} else {
+  $('ul.navigation a:first').click();
+}
+
+// offset is used to move to *exactly* the right place, since I'm using
+// padding on my example, I need to subtract the amount of padding to
+// the offset.  Try removing this to get a good idea of the effect
+var offset = parseInt((horizontal ? 
+  $container.css('paddingTop') : 
+  $container.css('paddingLeft')) 
+  || 0) * -1;
+
+	var scrollOptions = {
+		target: $scroll,
+		items: $panels,
+		navigation: '.navigation a',
+		axis: 'xy',
+  	    offset: offset,
+		duration: 500,
+		easing: 'swing',
+		onAfter: trigger
+	};
+
+	
+	
+	$('#slider').serialScroll(scrollOptions);
+	
+	
+});
+
+	
+	
+	
+
+/*	
+	$(function(){
+		$('#loadButton').click(function(){
+			$.getScript('/javascripts/test.js' //,function(){$('#inspectButton').click()}
+            );
+        });
+	$('#inspectButton').click(function(){
+		someFunction(someVariable);
+	});		
+});
+*/
+</script>
+
+</head>
+<body>
+	
+  <div id="slider"> 
+  	<div>
+	  <ul class="navigation">
+       <% @group.sort.each do |key, list|  %>
+	  	 <li><a href="#<%= key %>"><%= key %></a></li>
+		<% end %>
+	  </ul>	
+	</div>
+    <div class="scroll">
+      <div class="scrollContainer">
+	     <% @group.sort.each do |key, list|  %>
+		 
+		   <div class="panel" id="<%= key %>"><span><%= key %></span>
+	         <% list.each_with_index do |store,i|  %>	   	
+	         <p><%= i %> <span><%= store.title %></span></p>    	
+		     <% end  %>	  		 
+
+		   </div>
+	     <% end  %>	  
+      </div>
+    </div>
+	
+
+		
+  </div>
+
+</body>
+</html>
