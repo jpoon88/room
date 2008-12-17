@@ -16,7 +16,7 @@
 }
 
 .scroll {
-  height: 250px;
+  height: 400px;
   overflow: hidden;
   position: relative; /* fix for IE to respect overflow */
   clear: left;
@@ -32,6 +32,13 @@
 	display: inline;
 }
 
+div.panel ul {
+  font-size: 0.8em;
+  width: 140px;
+  float: left;
+  margin: 0; padding: 0;
+  line-height: 1.0em;
+}
 </style>
 
 <script type="text/javascript">
@@ -129,16 +136,18 @@ var offset = parseInt((horizontal ?
 	     <% @group.sort.each do |key, list|  %>
 		 
 		   <div class="panel" id="<%= key %>"><span><%= key %></span>
-	         <% list.each_with_index do |store,i|  %>	   	
-	         <p><%= i %> <span><%= store.title %></span></p>    	
-		     <% end  %>	  		 
-
+			  <% list.in_groups_of(12) do |sublist|  %>
+		 	   <ul>
+	             <% sublist.each_with_index do |store,i|  %>	  
+	
+	              <p><%= i %> <span><%= store.title if store %></span></p>    	
+		         <% end  %>	  		 
+               </ul>
+             <% end %>
 		   </div>
 	     <% end  %>	  
       </div>
     </div>
-	
-
 		
   </div>
 

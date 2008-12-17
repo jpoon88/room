@@ -7,7 +7,7 @@ class DistrictsController < ApplicationController
   end
   
   def map2
-    @stores = Store.find(:all, :order => ['code'])
+    @stores = Store.find(:all, :order => ['date_open'])
     @group = @stores.group_by { |s| s.date_open.year  }
     
     render :layout => false
