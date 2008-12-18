@@ -14,7 +14,7 @@ class DistrictsController < ApplicationController
     @stores_by_year = Hash.new
     @group.each { |k,v| @stores_by_year[k] = v.collect {|x| x.code }  }
     
-    list = Store.find_by_sql("select year(date_open) as year, min(lat) as sw_lat, min(lng) as sw_lng, max(lat) as ne_lat, max(lng) as ne_lng FROM stores group by year(date_open)")
+    list = Store.find_by_sql("select year_open as year, min(lat) as sw_lat, min(lng) as sw_lng, max(lat) as ne_lat, max(lng) as ne_lng FROM stores group by year_open")
 
     @borders = Hash.new
     list.each { |item| @borders[item.year] = { 'ne' => [item.ne_lat.to_f, item.ne_lng.to_f], 'sw' => [item.sw_lat.to_f, item.sw_lng.to_f] }   } 
