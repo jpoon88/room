@@ -34,7 +34,9 @@ class CreateStores < ActiveRecord::Migration
       t.decimal :lat, :precision => 20, :scale => 14
       t.decimal :lng, :precision => 20, :scale => 14
       
+      t.integer :year_open        
       t.date :date_open      
+
       t.timestamps
     end
   end

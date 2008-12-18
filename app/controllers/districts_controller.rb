@@ -8,8 +8,22 @@ class DistrictsController < ApplicationController
   
   def map2
     @stores = Store.find(:all, :order => ['date_open'])
-    @group = @stores.group_by { |s| s.date_open.year  }
+    @group = @stores.group_by { |s| s.year_open  }
+   
+    @stores_hash = Hash[*(@stores).collect {|v| [v.code,v]}.flatten]
+    @stores_by_year = Hash.new
+    @group.each { |k,v| @stores_by_year[k] = v.collect {|x| x.code }  }
     
+    list = Store.find_by_sql("select year(date_open) as year, min(lat) as sw_lat, min(lng) as sw_lng, max(lat) as ne_lat, max(lng) as ne_lng FROM stores group by year(date_open)")
+
+    @borders = Hash.new
+    list.each { |item| @borders[item.year] = { 'ne' => [item.ne_lat.to_f, item.ne_lng.to_f], 'sw' => [item.sw_lat.to_f, item.sw_lng.to_f] }   } 
+
+
+
+    @group_latlng = @group.map {|k,values| values.map { |v| {'code' => v['code'], 
+                 'lat'=> v['lat'], 'lng'=> v['lng'] }}  }
+
     render :layout => false
   end
   

@@ -3,6 +3,10 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <title>Google Maps JavaScript API Example</title>
+<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
+        type="text/javascript">
+</script>
+
 
 <%= javascript_include_tag 'jquery-1.2.6.js' %>
 <%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
@@ -33,6 +37,7 @@
 }
 
 div.panel ul {
+  list-style:none;
   font-size: 0.8em;
   width: 140px;
   float: left;
@@ -42,7 +47,52 @@ div.panel ul {
 </style>
 
 <script type="text/javascript">
+	
+var borders = <%= @borders.to_json %>;	
+var stores = <%= @stores_hash.to_json %>;
+var stores_by_year = <%=  @stores_by_year.to_json %>;
+	
 $(document).ready( function() {
+
+
+	if (GBrowserIsCompatible()) {
+		map = new GMap2(document.getElementById("map"));
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+
+        var point1 = new GLatLng(25.645754,-122.159897);		
+        var point2 = new GLatLng( 44.853587,-70.944562);		
+		var bounds = new GLatLngBounds( point1, point2 );
+	    map.setCenter( bounds.getCenter(), 4);
+		map.addOverlay(new GMarker(point1));
+		map.addOverlay(new GMarker(point2));
+
+
+/*		
+		// Add 10 markers to the map at random locations
+		var bounds = map.getBounds();
+		var southWest = bounds.getSouthWest();
+		var northEast = bounds.getNorthEast();
+		var lngSpan = northEast.lng() - southWest.lng();
+		var latSpan = northEast.lat() - southWest.lat();
+		for (var i = 0; i < 10; i++) {
+			var point = new GLatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random());
+			map.addOverlay(new GMarker(point));
+		}
+*/		
+	}
+	
+    $('div.panel a').click(function(e){ 
+		// console.log(e.target.id)
+		id = e.target.id;
+		store = stores[ id ]['store'];
+  	    var point = new GLatLng( store['lat'],store['lng']);		
+		map.setCenter( point, 13);
+	    map.addOverlay(new GMarker(point));
+
+	});
+	
+	
     var $panels = $("#slider .panel");
     var $container = $('#slider .scrollContainer');
 
@@ -61,21 +111,45 @@ if (horizontal) {
   $container.css('width', $panels[0].offsetWidth * $panels.length);
 }
 
-    var $scroll = $('#slider .scroll').css({'overflow':'scroll'});   
+    var $scroll = $('#slider .scroll').css({'overflow':'hidden'});   
 
 
 
    
-   function trigger() {
-   		console.log(this); 
-		return false;
-	}
 	
 if (window.location.hash) {
   trigger({ id : window.location.hash.substr(1) });
 } else {
   $('ul.navigation a:first').click();
 }
+
+
+
+   function trigger(event) {
+     //console.log(event);
+	}
+
+
+   function showMarkers(event) {
+  	
+	    var yr = event.id;
+		
+        var pt_ne = new GLatLng( borders[yr]['ne'][0], borders[yr]['ne'][1]);
+        var pt_sw = new GLatLng( borders[yr]['sw'][0], borders[yr]['sw'][1]);
+		var bounds = new GLatLngBounds( pt_sw, pt_ne );
+		map.clearOverlays();
+	    map.setCenter( bounds.getCenter(), 2);
+		//map.addOverlay(new GMarker(pt_ne));
+		//map.addOverlay(new GMarker(pt_sw));
+
+	    // Add stores markers
+		for (s in stores_by_year[yr]) {
+	      store = stores[ stores_by_year[yr][s] ]['store']
+		  console.log( store['lat']    );	
+		  var point = new GLatLng( store['lat'],store['lng']);
+		  map.addOverlay(new GMarker(point));
+		}
+	}
 
 // offset is used to move to *exactly* the right place, since I'm using
 // padding on my example, I need to subtract the amount of padding to
@@ -93,13 +167,22 @@ var offset = parseInt((horizontal ?
   	    offset: offset,
 		duration: 500,
 		easing: 'swing',
-		onAfter: trigger
+		onAfter: showMarkers,
+		onBefore: trigger
 	};
 
 	
 	
 	$('#slider').serialScroll(scrollOptions);
 	
+
+// Prepare a list of title for autocomplete
+	var a2 = new Array();
+	jQuery.each(stores, function(k,v) { 
+	a2.push(v['store']['title']) });
+
+
+
 	
 });
 
@@ -139,8 +222,9 @@ var offset = parseInt((horizontal ?
 			  <% list.in_groups_of(12) do |sublist|  %>
 		 	   <ul>
 	             <% sublist.each_with_index do |store,i|  %>	  
-	
-	              <p><%= i %> <span><%= store.title if store %></span></p>    	
+	                <% if store then %>
+	              <li><a id="<%= store.code %>" href="#"><%= store.title  %></a></li>    	
+   		           <% end  %>	  		 
 		         <% end  %>	  		 
                </ul>
              <% end %>
@@ -149,6 +233,22 @@ var offset = parseInt((horizontal ?
       </div>
     </div>
 		
+  </div>
+
+  <div id="map" style="height: 300px; width:100%"></div>  
+
+  <div class="section">
+  	<div class="sectionheader">
+  		<h2></h2>
+  	</div>
+	<div class="sectionwrap">
+		<ul class="gridlist">
+		<li>
+			<a href=""></a>
+		</li>
+		</ul>
+	</div>
+	  
   </div>
 
 </body>
