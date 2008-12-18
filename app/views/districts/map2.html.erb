@@ -8,10 +8,16 @@
 </script>
 
 
+
 <%= javascript_include_tag 'jquery-1.2.6.js' %>
 <%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
 <%= javascript_include_tag 'jquery.serialScroll-1.2.1-min.js' %>
 <%= javascript_include_tag 'jquery.localscroll-1.2.6-min.js' %>
+<%= javascript_include_tag 'thickbox-compressed.js' %>
+<style type="text/css" media="all">
+@import "/javascripts/thickbox.css";
+</style>
+
 <style type="text/css">
 #slider {
   width: 620px;
@@ -54,6 +60,7 @@ var stores_by_year = <%=  @stores_by_year.to_json %>;
 	
 $(document).ready( function() {
 
+// tb_show('testing title', "http://www.vsb.bc.ca/?KeepThis=true&TB_iframe=true&height=460&width=680", false)
 
 	if (GBrowserIsCompatible()) {
 		map = new GMap2(document.getElementById("map"));
@@ -207,6 +214,8 @@ var offset = parseInt((horizontal ?
 
 </head>
 <body>
+
+<a href="http://www.apple.com/retail/bridgestreet/?KeepThis=true&TB_iframe=true&height=460&width=685"  title="add a caption to title attribute / or leave blank" class="thickbox">Test thickbox </a>
 	
   <div id="slider"> 
   	<div>
@@ -252,6 +261,8 @@ var offset = parseInt((horizontal ?
 	</div>
 	  
   </div>
+
+
 
 </body>
 </html>
