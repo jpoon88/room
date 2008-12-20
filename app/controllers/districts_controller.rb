@@ -5,6 +5,17 @@ class DistrictsController < ApplicationController
     @districts = District.find(:all, :order => ['title' ])
     render :layout => false
   end
+
+  def country
+    @stores = Store.find(:all, :order => "country, title")
+    @group_by_country = @stores.group_by { |s| s.country  }
+    
+    rows = Store.find_by_sql("select max(row) as max_count from (SELECT year_open, month_open, count(*) as row FROM stores group by year_open, month_open order by year_open, month_open) as a")
+    @max_count = rows.first.max_count
+
+
+    
+  end
   
   def map2
     @stores = Store.find(:all, :order => ['date_open'])
