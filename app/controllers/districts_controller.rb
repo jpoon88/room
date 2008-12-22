@@ -7,13 +7,30 @@ class DistrictsController < ApplicationController
   end
 
   def country
+    
     @stores = Store.find(:all, :order => "country, title")
     @group_by_country = @stores.group_by { |s| s.country  }
     
-    rows = Store.find_by_sql("select max(row) as max_count from (SELECT year_open, month_open, count(*) as row FROM stores group by year_open, month_open order by year_open, month_open) as a")
-    @max_count = rows.first.max_count
+    @stores_hash = Hash[*(@stores).collect {|v| [v.code,v]}.flatten] 
+    @group = @stores.group_by { |s| s.year_open.to_s + '-' + s.month_open.to_s  }
+    # Value: Store ID only
+    @stores_by_year_month = Hash.new
+    @counts_by_year_month = Hash.new
+    @group.each { |k,v| 
+      @stores_by_year_month[k] = v.collect {|x| x.code }
+      @counts_by_year_month[k] = v.size 
+    }
+    @max_count = @counts_by_year_month.values.max 
+    @year_list = Store.find(:all, :select => 'year_open', :group => 'year_open', :order => 'year_open').map {|s| s.year_open}
 
-
+    #@count_by_year_month = Store.find_by_sql("SELECT year_open, month_open, count(*) as total FROM stores group by year_open, month_open order by year_open, month_open")
+    #@max_count = @count_by_year_month.max {|b,c| b.total.to_i <=> c.total.to_i }.total.to_i
+    #@max_count = (@max_count / 10.0).ceil * 10
+    #@group_by_year_month = @count_by_year_month.group_by { |s| s.year_open.to_s + '-' + s.month_open.to_s  }
+    #@group_by_year_month.map {|k,v| @group_by_year_month[k] = v[0].total.to_i }
+    
+    
+    render :layout => false
     
   end
   
