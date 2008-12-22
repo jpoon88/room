@@ -4,6 +4,9 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <title>Google Maps JavaScript API Example</title>
 
+<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
+        type="text/javascript">
+</script>
 
 <%= javascript_include_tag 'jquery-1.2.6.js' %>
 <%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
@@ -18,20 +21,195 @@
 var stores = <%= @stores_hash.to_json %>;
 var stores_by_year_month = <%=  @stores_by_year_month.to_json %>;
 var counts_by_year_month = <%=  @counts_by_year_month.to_json %>;
+var stores_by_year = <%=  @stores_by_year.to_json %>;
+var counts_by_year = <%=  @counts_by_year.to_json %>;
+
+var map;
+var centerLatitude = 49.282484;
+var centerLongitude = -123.118145;
+var startZoom = 1;
+var markers = [];
+
+
+$(document).ready( function() {
+
+
+// tb_show('testing title', "http://www.vsb.bc.ca/?KeepThis=true&TB_iframe=true&height=460&width=680", false)
+    handleResize();
+	if (GBrowserIsCompatible()) {
+		map = new GMap2(document.getElementById("map"));
+		map.addControl(new GLargeMapControl());
+		map.addControl(new GMapTypeControl());
+		
+		var location = new GLatLng(centerLatitude, centerLongitude);
+	    map.setCenter(location, startZoom);
+
+    }
+
+	$("a[@class='month']").click( function(e) { 
+	   showMarkers(e, this); })
+
+
+});
+
+
+
+   function showMarkers(event, el) {
+  	
+	    var key = el.id;
+		console.log(key);
+		
+		map.clearOverlays();
+		markers = []
+	    // Add stores markers
+		for (s in stores_by_year_month[key]) {
+			store = stores[stores_by_year_month[key][s]]['store']
+			console.log(store['title']);
+			
+			addMarker(store['lat'], store['lng'], store['title'], store['url']);
+		}
+		
+	/*
+        var pt_ne = new GLatLng( borders[yr]['ne'][0], borders[yr]['ne'][1]);
+        var pt_sw = new GLatLng( borders[yr]['sw'][0], borders[yr]['sw'][1]);
+		var bounds = new GLatLngBounds( pt_sw, pt_ne );
+		map.clearOverlays();
+	    map.setCenter( bounds.getCenter(), 2);
+		//map.addOverlay(new GMarker(pt_ne));
+		//map.addOverlay(new GMarker(pt_sw));
+
+	    // Add stores markers
+		for (s in stores_by_year[yr]) {
+	      store = stores[ stores_by_year[yr][s] ]['store']
+		  console.log( store['lat']    );	
+		  var point = new GLatLng( store['lat'],store['lng']);
+		  map.addOverlay(new GMarker(point));
+		}
+*/		
+	}
+
+function addMarker(lat, lng, description, url){
+  var marker = new GMarker( new GLatLng( lat,lng),
+        {title: description});
+console.log(url);
+  GEvent.addListener(marker,'click', 
+     function() {
+
+		tb_show(description, url+"?KeepThis=true&TB_iframe=true&height=460&width=680", false)	 	
+		
+	 	//marker.openInfoWindowHtml( description )
+	 } 
+  );		  
+/*  
+  GEvent.addListener(marker,'mouseover', 
+    function() {
+		
+		marker.openInfoWindowHtml( "<div style=width:200px;height=50px;>Home</div>",
+		  { pixelOffset: new GSize(0,0)}
+		 )
+	 	$('#debug').html( description );
+
+	 } 
+  );		  
+  GEvent.addListener(marker,'mouseout', 
+    function() {
+		marker.closeInfoWindow();
+	 	$('#debug').html( '' );
+		tooltip.style.visibility="hidden"
+	 } 
+  );		  
+*/
+
+  
+  map.addOverlay( marker );
+	
+}
+
+
+ // ====== This function displays the tooltip ======
+      // it can be called from an icon mousover or a side_bar mouseover
+
+
+function windowHeight() {
+	// Standard browsers (Mozilla, Safari, etc.)
+	if (self.innerHeight)
+		return self.innerHeight;
+	// IE 6
+	if (document.documentElement && document.documentElement.clientHeight)
+		return y = document.documentElement.clientHeight;
+	// IE 5
+	if (document.body)
+		return document.body.clientHeight;
+	// Just in case.
+		return 0;
+}
+function handleResize() {
+	var height = windowHeight();
+	height -= (document.getElementById('header').offsetHeight + 
+            	document.getElementById('footer').offsetHeight);
+	document.getElementById('map').style.height = height + 'px';
+	
+	$('#debug').html(height);
+
+}
+
+$(window).bind('resize', handleResize);
+
 </script>
 
 <style type="text/css">
 
-body {
-background:#FFFFFF none repeat scroll 0 0;
-color:#2B332E;
-font-family:Arial,sans-serif;
-height:100%;
-line-height:1.4;
-width:100%;
-margin: 0;
-padding: 0;
+html, body {
+	background:#FFFFFF none repeat scroll 0 0;
+	color:#2B332E;
+	font-family:Arial,sans-serif;
+	height:100%;
+	line-height:1.4;
+	width:100%;
+	margin: 0;
+	padding: 0;
 }
+
+div#container {
+	position:relative; /* needed for footer positioning*/
+	margin:0 auto; /* center, not in IE5 */
+	width:750px;
+	background:#f0f0f0;
+	
+	height:auto !important; /* real browsers */
+	height:100%; /* IE6: treaded as min-height*/
+
+	min-height:100%; /* real browsers */
+}
+
+div#header {
+	padding:1em;
+	background:#ddd url("../csslayout.gif") 98% 10px no-repeat;
+	border-bottom:6px double gray;
+}
+
+div#content {
+/* padding:1em 1em 5em; */ /* bottom padding for footer */
+
+
+}
+
+#map {
+  border: 1px solid red;	
+  width:100%;
+  overflow: hidden;
+
+}
+
+div#footer {
+	position:absolute;
+	width:100%;
+	bottom:0; /* stick to bottom */
+	background:#ddd;
+	border-top:6px double gray;
+}
+
+
 
 a {
   color:#2D7BB2;
@@ -40,6 +218,8 @@ a {
 a:hover {
 color:#2B332E;
 }
+
+
 
 /* CALENDAR CHARTS */
 table {
@@ -151,11 +331,12 @@ border-color:#2D7BB2;
 </style>
 </head>
 <body>
-	
-<div ="header">
-	Header
-</div>
-<div class="module-content">
+
+
+<div id="container">
+
+<div id="header">
+	<div class="module-content">
 	<div class="calendarchart">
 	<h2><strong class="number"><%= @stores.size %></strong> stores</h2>
 	<p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
@@ -166,7 +347,7 @@ border-color:#2D7BB2;
   <% (1..12).to_a.each do |month| %>
    <td><div class='day'>
 	<% if @counts_by_year_month["#{year}-#{month}"] %>
-	<a title="test" href="#"><strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
+	<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#"><strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
 	<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;">( total)</span></a>
 	 <% else  %>
  	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
@@ -179,7 +360,11 @@ border-color:#2D7BB2;
 	<tr>
 	<% @year_list.each do |year| %>	
 	   <th class="yearlabel" id="year_<%= year %>" colspan="12">
-  	   <a href="/crime/by-date/2008/12/"><%= year %></a>
+ 	   <% if @counts_by_year[year] %>	   	
+       	  <a class="year" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="/crime/by-date/2008/12/"><%= year %></a>
+	<% else %>
+	      <span> </span>
+	<% end  %>
 	   </th>
 	<% end %>
 	</tr>
@@ -187,10 +372,18 @@ border-color:#2D7BB2;
 	</table>
 	</div>
 
+	</div>	
+</div>
+<div id="content">
+	<div id="map"></div>  
+</div>	
+<div id="footer">
+	<p><span id="debug"></span>
+				This footer is absolutely positioned to bottom:0; of  #container. The padding-bottom of #content keeps me from overlapping it when the page is longer than the viewport.
+			</p>
+</div>
 </div>	
 
-<% @group_by_country.each do |key, countries| %>	
-  <h2><%= key %></h2>
-<% end  %>	
+  
 </body>
 </html>

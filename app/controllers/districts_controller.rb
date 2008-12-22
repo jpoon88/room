@@ -16,12 +16,20 @@ class DistrictsController < ApplicationController
     # Value: Store ID only
     @stores_by_year_month = Hash.new
     @counts_by_year_month = Hash.new
-    @group.each { |k,v| 
+    @group.map { |k,v| 
       @stores_by_year_month[k] = v.collect {|x| x.code }
       @counts_by_year_month[k] = v.size 
     }
     @max_count = @counts_by_year_month.values.max 
     @year_list = Store.find(:all, :select => 'year_open', :group => 'year_open', :order => 'year_open').map {|s| s.year_open}
+
+    @group_by_year = @stores.group_by { |s| s.year_open  }
+    @stores_by_year = Hash.new    
+    @counts_by_year = Hash.new    
+    @group_by_year.map { |k,v| 
+      @stores_by_year[k] = v.collect {|x| x.code }
+      @counts_by_year[k] = v.size
+    }
 
     #@count_by_year_month = Store.find_by_sql("SELECT year_open, month_open, count(*) as total FROM stores group by year_open, month_open order by year_open, month_open")
     #@max_count = @count_by_year_month.max {|b,c| b.total.to_i <=> c.total.to_i }.total.to_i
