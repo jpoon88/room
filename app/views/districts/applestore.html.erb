@@ -3,11 +3,15 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <title>Google Maps JavaScript API Example</title>
-
+<%
+=begin
+%>
 <script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
         type="text/javascript">
 </script>
-
+<% 
+=end
+%>
 <%= javascript_include_tag 'jquery-1.2.6.js' %>
 <%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
 <%= javascript_include_tag 'jquery.serialScroll-1.2.1-min.js' %>
@@ -207,6 +211,8 @@ div#header {
 	padding:1em;
 	background:#ddd url("../csslayout.gif") 98% 10px no-repeat;
 	border-bottom:6px double gray;
+	height:200px;
+	
 }
 
 div#content {
@@ -256,21 +262,15 @@ overflow: none;
 white-space: nowrap;
 padding: 0.1em 16px;
 margin: 2px 10px;
+	height:200px;
+
 }
-
-div.calendarchart {
-float:left;
-overflow:hidden;
-position:relative;
-
-padding-right: 16px;
-}
-
 
 .calendarchart {
-float:left;
-overflow:hidden;
+
+overflow:none;
 position:relative;
+
 
 }
 .calendarchart h3, .calendarchart h2 {
@@ -285,31 +285,53 @@ font-size:0.75em;
 margin:1em 0 0;
 text-align:right;
 }
-.calendarchart table {
+.calendarchart ul {
 clear:both;
 font-size:0.75em;
 margin:0;
 }
-.calendarchart table td{
+
+.calendarchart li {
 margin:0;
 padding: 0;
 border:0 none;
 
 }
 
-.calendarchart table .yearlabel {
+.calendarchart li .yearlabel {
 
 padding-top:2.5em;
 }
-.calendarchart table .yearlabel a {
+.calendarchart li .yearlabel a {
 /* color:#808C85; */
 font-weight:bold;
 
 }
-.calendarchart table .yearlabel a:hover {
+.calendarchart li .yearlabel a:hover {
 /* color:#2B332E; */
 }
-.calendarchart table .day {
+.calendarchart ul.month { 
+	display: inline;
+}	
+	
+.calendarchart ul.month li {
+	display: inline;
+	width: 2.2em;
+}
+
+.calendarchart ul.month div {
+	display: inline;
+	width: 2.2em;
+}
+
+
+.calendarchart ul li {
+	height:200px;
+	width: 2.2em;
+}
+
+
+.calendarchart li .day {
 border-bottom:1px solid #DBE6DF;
 border-top:1px solid #DBE6DF;
 color:#808C85;
@@ -322,33 +344,47 @@ vertical-align:bottom;
 width: 2.2em;	
 
 }
-.calendarchart table .day a {
-display:block;
+.calendarchart li .day a {
+/* display:block; */
 height:100%;
+width: 2.2em;
 position:relative;
 }
-.calendarchart table .day .label {
+.calendarchart li .day .label {
 bottom:-2em;
 left:0;
-position:absolute;
+
 text-align:center;
 width:100%;
 }
-.calendarchart table .day .bar {
+.calendarchart li .day .bar {
 background:#A8B2AC none repeat scroll 0 0;
 border-bottom:1px solid #A8B2AC;
 bottom:0;
-display:block;
+/* display:block; */
 overflow:hidden;
-position:absolute;
+
 text-indent:-9999px;
 width:100%;
 }
 
-.calendarchart table .day .bar:hover {
+.calendarchart li .day .bar:hover {
 background:#2D7BB2 none repeat scroll 0 0;
 border-color:#2D7BB2;
 }
+
+.calendarchart ul.month {
+	
+    list-style: none;
+    overflow: none;
+    white-space: nowrap;
+    padding: 0 10px;
+    margin: 0;
+}
+
+
+
+
 /* Slider */
 .slider {
     height: 17px;
@@ -409,12 +445,11 @@ border-color:#2D7BB2;
 	<div class="calendarchart">
 	<h2><strong class="number"><%= @stores.size %></strong> stores</h2>
 	<p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
-	<table class="calcharttable">
-	<tbody>
-	<tr>
+<ul class="month">
 <% @year_list.each do |year| %>	
   <% (1..12).to_a.each do |month| %>
-   <td><div class='day'>
+   <li>
+   <div class='day'>
 	<% if @counts_by_year_month["#{year}-#{month}"] %>
 	<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#"><strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
 	<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;">( total)</span></a>
@@ -422,23 +457,22 @@ border-color:#2D7BB2;
  	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
 	 <span style="height: 0px;"> </span> 
 	 <% end %>
-	 </div></td>
+	 </div>
+	</li>
   <% end %>
 <% end %>	
-	</tr>	
-	<tr>
+	</ul>
+	<ul class='year'>
 	<% @year_list.each do |year| %>	
-	   <th class="yearlabel" id="year_<%= year %>" colspan="12">
+	   <li class="yearlabel" id="year_<%= year %>" colspan="12">
  	   <% if @counts_by_year[year] %>	   	
        	  <a class="year" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="/crime/by-date/2008/12/"><%= year %></a>
 	<% else %>
 	      <span> </span>
 	<% end  %>
-	   </th>
+	   </li>
 	<% end %>
-	</tr>
-	</tbody>
-	</table>
+	</ul>
 	</div>
 		</div>	
 	<div class="slider">

@@ -7,6 +7,11 @@ class DistrictsController < ApplicationController
   end
 
   def country
+    applestore
+    
+  end
+  
+  def applestore
     
     @stores = Store.find(:all, :order => "country, title")
     @group_by_country = @stores.group_by { |s| s.country  }
