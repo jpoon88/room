@@ -3,15 +3,11 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 <title>Google Maps JavaScript API Example</title>
-<%
-=begin
-%>
+
 <script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
         type="text/javascript">
 </script>
-<% 
-=end
-%>
+
 <%= javascript_include_tag 'jquery-1.2.6.js' %>
 <%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
 <%= javascript_include_tag 'jquery.serialScroll-1.2.1-min.js' %>
@@ -53,6 +49,76 @@ $(document).ready( function() {
 
 	$("a[@class='month']").click( function(e) { 
 	   showMarkers(e, this); })
+	$("a[@class='year']").click( function(e) { 
+	   showMarkers(e, this); })
+
+
+
+    /* scroll slider */
+	
+	var $panels = $("#slider .panel");
+	var $container = $('#slider .scrollContainer');
+	var $scroll = $('#slider .scroll').css({'overflow':'hidden'});
+
+    // if false, we'll float all the panels left and fix the width 
+    // of the container
+    var horizontal = true;
+
+
+   // float the panels left if we're going horizontal
+    if (horizontal) {
+        $panels.css({
+//            'float' : 'left',
+//            'position' : 'relative' // IE fix to ensure overflow is hidden
+        });
+
+        // calculate a new width for the container (so it holds all panels)
+        $container.css('width', $panels[0].offsetWidth * $panels.length);
+    }
+	
+
+    $scroll
+      .before('<img src="http://jqueryfordesigners.com/demo/images/scroll_left.png" class="scrollButtons left" />' )
+      .after('<img src="http://jqueryfordesigners.com/demo/images/scroll_right.png" class="scrollButtons right" />' );
+	
+	$('#slider .navigation a').click(selectNav);
+	
+	function selectNav() {
+	  $(this).parents('ul:first').find('a').removeClass('selected').end().end().addClass('selected');
+	}
+	
+	var scrollOptions = {
+		target: $scroll,
+		items: $panels,
+		navigation: '.navigation a',
+		prev: 'img.left',
+		next: 'img.right',
+		axis: 'xy',
+		duration: 500,
+		easing: 'swing',
+		onAfter: trigger
+	};
+
+    // go find the navigation link that has this target and select the nav
+	function trigger() {
+		console.log(this); 
+	}
+
+    // apply serialScroll to the slider - we chose this plugin because it 
+    // supports// the indexed next and previous scroll along with hooking 
+    // in to our navigation.
+    $('#slider').serialScroll(scrollOptions);
+
+    // now apply localScroll to hook any other arbitrary links to trigger 
+    // the effect
+    $.localScroll(scrollOptions);
+
+   // finally, if the URL has a hash, move the slider in to position, 
+    // setting the duration to 1 because I don't want it to scroll in the
+    // very first page load.  We don't always need this, but it ensures
+    // the positioning is absolutely spot on when the pages loads.
+    scrollOptions.duration = 1;
+    $.localScroll.hash(scrollOptions);
 
 
 });
@@ -62,16 +128,25 @@ $(document).ready( function() {
    function showMarkers(event, el) {
   	
 	    var key = el.id;
-		console.log(key);
-		
+		console.log( el );
+	
 		map.clearOverlays();
-		markers = []
-	    // Add stores markers
-		for (s in stores_by_year_month[key]) {
-			store = stores[stores_by_year_month[key][s]]['store']
-			console.log(store['title']);
-			
-			addMarker(store['lat'], store['lng'], store['title'], store['url']);
+
+console.log(  event.target.id );
+	    // Add stores markers	
+		if (key.indexOf('-') == -1) {
+
+	  	  for (s in stores_by_year[key]) {
+		  	store = stores[stores_by_year[key][s]]['store']
+		  	console.log(store['title']);
+		  	addMarker(store['lat'], store['lng'], store['title'], store['url']);
+		  }	
+		} else {
+		  for (s in stores_by_year_month[key]) {
+		  	store = stores[stores_by_year_month[key][s]]['store']
+		  	console.log(store['title']);
+		  	addMarker(store['lat'], store['lng'], store['title'], store['url']);
+		  }
 		}
 		
 	/*
@@ -161,6 +236,7 @@ function handleResize() {
 $(window).bind('resize', handleResize);
 
 // Slider related 
+/*
 window.onload = function () {
     var container = $('div.module-content');
     var ul = $('table.calendarchart', container);
@@ -179,13 +255,13 @@ console.log(itemsWidth);
         }
     });
 };
-
+*/
 </script>
 
 <style type="text/css">
 
 html, body {
-	background:#FFFFFF none repeat scroll 0 0;
+	background:#EDEDEC none repeat scroll 0 0; 
 	color:#2B332E;
 	font-family:Arial,sans-serif;
 	height:100%;
@@ -208,24 +284,16 @@ div#container {
 }
 
 div#header {
-	padding:1em;
-	background:#ddd url("../csslayout.gif") 98% 10px no-repeat;
-	border-bottom:6px double gray;
-	height:200px;
-	
+	border-bottom:1px solid gray;
 }
 
 div#content {
 /* padding:1em 1em 5em; */ /* bottom padding for footer */
-
-
 }
 
 #map {
-  border: 1px solid red;	
   width:100%;
   overflow: hidden;
-
 }
 
 div#footer {
@@ -233,7 +301,7 @@ div#footer {
 	width:100%;
 	bottom:0; /* stick to bottom */
 	background:#ddd;
-	border-top:6px double gray;
+	border-top:1px solid gray;
 }
 
 
@@ -254,84 +322,110 @@ border-collapse:collapse;
 border-spacing:0;
 }
 
+#shade {
+    background: #EDEDEC url(http://jqueryfordesigners.com/demo/images/shade.jpg) no-repeat 0 0;
+    height: 50px;
+}
+
+
+ul.navigation {
+	font-size: 0.8em;
+clear: both;	
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 7px;
+text-align: right;	
+}
+
+ul.navigation li {
+    display: inline;
+    margin-right: 10px;
+}
+
+ul.navigation a {
+    padding: 9px;
+	font-weight: bold; 
+    text-decoration: none;
+}
+
+ul.navigation a:hover {
+    background-color: #f6f6f6;
+}
+
+ul.navigation a.selected {
+    background-color: #fff;
+}
+
+ul.navigation a:focus {
+    outline: none;
+}
+
+
 .module-content {
-	
-border:1px solid #C0CCC4;
-position: absolute;
-overflow: none; 
 white-space: nowrap;
-padding: 0.1em 16px;
-margin: 2px 10px;
-	height:200px;
-
 }
 
-.calendarchart {
+#slider {
+  margin: 0 auto;
+  position: relative;
+    width: 710px;  
+}
 
-overflow:none;
-position:relative;
+.scroll {
+    height: 170px;
+    width: 710px;
+    overflow: auto;
+    overflow-x: hidden;
+    position: relative;
+    clear: left;
+    background: #FFFFFF url(http://jqueryfordesigners.com/demo/images/content_pane-gradient.gif) repeat-x scroll left bottom;
+}
 
+.scrollContainer  {
+width: 710px;
+   height: 130px; 
+   padding-top: 10px;
 
 }
-.calendarchart h3, .calendarchart h2 {
+#slider h3, #slider h2 {
 clear:left;
 float:left;
-margin:0.5em 16px 0.25em 0;
+margin:0 16px 0 0;
 }
 
-.calendarchart .maxcount {
+#slider .maxcount {
 color:#A8B2AC;
 font-size:0.75em;
 margin:1em 0 0;
 text-align:right;
 }
-.calendarchart ul {
+
+#slider table {
 clear:both;
 font-size:0.75em;
 margin:0;
 }
-
-.calendarchart li {
+#slider table td {
 margin:0;
 padding: 0;
 border:0 none;
 
 }
 
-.calendarchart li .yearlabel {
+#slider table .panel {
 
 padding-top:2.5em;
 }
-.calendarchart li .yearlabel a {
+#slider table .panel a {
 /* color:#808C85; */
 font-weight:bold;
 
 }
-.calendarchart li .yearlabel a:hover {
+#slider table .panel a:hover {
 /* color:#2B332E; */
 }
-.calendarchart ul.month { 
-	display: inline;
-}	
-	
-.calendarchart ul.month li {
-	display: inline;
-	width: 2.2em;
-}
-
-.calendarchart ul.month div {
-	display: inline;
-	width: 2.2em;
-}
-
-
-.calendarchart ul li {
-	height:200px;
-	width: 2.2em;
-}
-
-
-.calendarchart li .day {
+#slider table .day {
 border-bottom:1px solid #DBE6DF;
 border-top:1px solid #DBE6DF;
 color:#808C85;
@@ -342,96 +436,53 @@ position:relative;
 text-align:center;
 vertical-align:bottom;
 width: 2.2em;	
+}
+
+#slider table th {
 
 }
-.calendarchart li .day a {
-/* display:block; */
+
+#slider table .day a {
+display:block;
 height:100%;
-width: 2.2em;
 position:relative;
 }
-.calendarchart li .day .label {
+#slider table .day .label {
 bottom:-2em;
 left:0;
-
+position:absolute;
 text-align:center;
 width:100%;
 }
-.calendarchart li .day .bar {
+#slider table .day .bar {
 background:#A8B2AC none repeat scroll 0 0;
 border-bottom:1px solid #A8B2AC;
 bottom:0;
-/* display:block; */
+display:block;
 overflow:hidden;
-
+position:absolute;
 text-indent:-9999px;
 width:100%;
 }
 
-.calendarchart li .day .bar:hover {
+#slider table .day .bar:hover {
 background:#2D7BB2 none repeat scroll 0 0;
 border-color:#2D7BB2;
 }
 
-.calendarchart ul.month {
-	
-    list-style: none;
-    overflow: none;
-    white-space: nowrap;
-    padding: 0 10px;
-    margin: 0;
-}
-
-
-
-
-/* Slider */
-.slider {
-    height: 17px;
-    padding: 1px;
-    position: relative;
-    background: url(http://jqueryfordesigners.com/demo/images/productbrowser_scrollbar_20070622.png) no-repeat;
-}
-
-.handle {
+.scrollButtons {
     position: absolute;
-    cursor: move;
-    height: 17px;
-    width: 181px;
-    top: 0;
-    background: url(http://jqueryfordesigners.com/demo/images/productbrowser_scroller_20080115.png) no-repeat;
-    z-index: 100;
-}
-
-.slider span {
-    color: #bbb;
-    font-size: 80%;
+    top: 110px;
     cursor: pointer;
-    position: absolute;
-    z-index: 110;
-    top: 3px;
 }
 
-.slider .slider-lbl1 {
-    left: 50px;
+.scrollButtons.left {
+    left: -20px;
 }
 
-.slider .slider-lbl2 {
-    left: 107px;
+.scrollButtons.right {
+    right: -20px;
 }
-
-.slider .slider-lbl3 {
-    left: 156px;
-}
-
-.slider .slider-lbl4 {
-    left: 280px;
-}
-
-.slider .slider-lbl5 {
-    left: 455px;
-}
-
 
 </style>
 </head>
@@ -442,49 +493,60 @@ border-color:#2D7BB2;
 
 <div id="header">
 	<div class="module-content">
-	<div class="calendarchart">
-	<h2><strong class="number"><%= @stores.size %></strong> stores</h2>
-	<p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
-<ul class="month">
+
+	<div id="slider">
+	 <h2><strong class="number"><%= @stores.size %></strong> stores</h2>
+	 <p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
+
+	<ul class="navigation">
+
+                <li><a href="#2001">2001</a></li>
+                <li><a href="#2002">2002</a></li>
+                <li><a href="#2003">2003</a></li>
+                <li><a href="#2004">2004</a></li>
+                <li><a href="#2005">2005</a></li>
+                <li><a href="#2006">2006</a></li>
+                <li><a href="#2007">2007</a></li>
+			    <li><a href="#2008">2008</a></li>
+          </ul>	
+
+  <div class="scroll">
+  <div class="scrollContainer">
+	<table >
+	<tbody>
+	<tr>
 <% @year_list.each do |year| %>	
   <% (1..12).to_a.each do |month| %>
-   <li>
-   <div class='day'>
+   <td><div class='day'>
 	<% if @counts_by_year_month["#{year}-#{month}"] %>
-	<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#"><strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
-	<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;">( total)</span></a>
+	<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#">
+	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
+	<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;"></span></a>
 	 <% else  %>
  	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
 	 <span style="height: 0px;"> </span> 
 	 <% end %>
-	 </div>
-	</li>
+	 </div></td>
   <% end %>
 <% end %>	
-	</ul>
-	<ul class='year'>
+	</tr>	
+	<tr>
 	<% @year_list.each do |year| %>	
-	   <li class="yearlabel" id="year_<%= year %>" colspan="12">
+	   <th class="panel"  colspan="12">
  	   <% if @counts_by_year[year] %>	   	
-       	  <a class="year" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="/crime/by-date/2008/12/"><%= year %></a>
+       	  <a class="year" id="<%= year %>" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="#"><%= year %></a>
 	<% else %>
 	      <span> </span>
 	<% end  %>
-	   </li>
+	   </th>
 	<% end %>
-	</ul>
+	</tr>
+	</tbody>
+	</table>
+	</div></div>
+
 	</div>
 		</div>	
-	<div class="slider">
-	    <!-- the handler to action the slide -->
-	    <div class="handle"></div>
-	    <!-- labels appear against the slider, as pointers to the user -->
-	    <span class="slider-lbl1">slider label 1</span>
-
-	    <span class="slider-lbl3">slider label 3</span>
-		    <span class="slider-lbl4">slider label 3</span>
-			    <span class="slider-lbl5">slider label 3</span>
-	  </div>
 
 </div>
 <div id="content">
