@@ -13,6 +13,16 @@ class DistrictsController < ApplicationController
   
   def applestore
     
+    # Notes: Dynamic data use to_json on the view 
+    # <script type="text/javascript">
+    # var stores = <%= @stores_hash.to_json %>;
+    # var stores_by_year_month = <%=  @stores_by_year_month.to_json %>;
+    # var counts_by_year_month = <%=  @counts_by_year_month.to_json %>;
+    # var stores_by_year = <%=  @stores_by_year.to_json %>;
+    # var counts_by_year = <%=  @counts_by_year.to_json %>;
+    
+    
+    
     @stores = Store.find(:all, :order => "country, title")
     @group_by_country = @stores.group_by { |s| s.country  }
     

@@ -2,561 +2,89 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<title>Google Maps JavaScript API Example</title>
+<title>Apple Retail Stores</title>
 
 <script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
         type="text/javascript">
 </script>
 
-<%= javascript_include_tag 'jquery-1.2.6.js' %>
-<%= javascript_include_tag 'jquery.scrollTo-1.4.0-min.js' %>
-<%= javascript_include_tag 'jquery.serialScroll-1.2.1-min.js' %>
-<%= javascript_include_tag 'jquery.localscroll-1.2.6-min.js' %>
-<%= javascript_include_tag 'thickbox-compressed.js' %>
-<script src="http://jqueryfordesigners.com/demo/jquery-ui-full-1.5.2.min.js" type="text/javascript" charset="utf-8"></script>
-<style type="text/css" media="all">
-@import "/javascripts/thickbox.css";
-</style>
-
+<script src="../jquery-1.2.6.min.js" type="text/javascript"></script>
+<script src="../jquery.scrollTo-1.4.0-min.js" type="text/javascript"></script>
+<script src="../jquery.serialScroll-1.2.1-min.js" type="text/javascript"></script>
+<script src="../jquery.localscroll-1.2.6-min.js" type="text/javascript"></script>
+<script src="../thickbox-compressed.js" type="text/javascript"></script>
 <script type="text/javascript">
 var stores = <%= @stores_hash.to_json %>;
 var stores_by_year_month = <%=  @stores_by_year_month.to_json %>;
 var counts_by_year_month = <%=  @counts_by_year_month.to_json %>;
 var stores_by_year = <%=  @stores_by_year.to_json %>;
 var counts_by_year = <%=  @counts_by_year.to_json %>;
-
-var map;
-var centerLatitude = 49.282484;
-var centerLongitude = -123.118145;
-var startZoom = 1;
-var markers = [];
-
-
-$(document).ready( function() {
-
-
-// tb_show('testing title', "http://www.vsb.bc.ca/?KeepThis=true&TB_iframe=true&height=460&width=680", false)
-    handleResize();
-	if (GBrowserIsCompatible()) {
-		map = new GMap2(document.getElementById("map"));
-		map.addControl(new GLargeMapControl());
-		map.addControl(new GMapTypeControl());
-		
-		var location = new GLatLng(centerLatitude, centerLongitude);
-	    map.setCenter(location, startZoom);
-
-    }
-
-	$("a[@class='month']").click( function(e) { 
-	   showMarkers(e, this); })
-	$("a[@class='year']").click( function(e) { 
-	   showMarkers(e, this); })
-
-
-
-    /* scroll slider */
-	
-	var $panels = $("#slider .panel");
-	var $container = $('#slider .scrollContainer');
-	var $scroll = $('#slider .scroll').css({'overflow':'hidden'});
-
-    // if false, we'll float all the panels left and fix the width 
-    // of the container
-    var horizontal = true;
-
-
-   // float the panels left if we're going horizontal
-    if (horizontal) {
-        $panels.css({
-//            'float' : 'left',
-//            'position' : 'relative' // IE fix to ensure overflow is hidden
-        });
-
-        // calculate a new width for the container (so it holds all panels)
-        $container.css('width', $panels[0].offsetWidth * $panels.length);
-    }
-	
-
-    $scroll
-      .before('<img src="http://jqueryfordesigners.com/demo/images/scroll_left.png" class="scrollButtons left" />' )
-      .after('<img src="http://jqueryfordesigners.com/demo/images/scroll_right.png" class="scrollButtons right" />' );
-	
-	$('#slider .navigation a').click(selectNav);
-	
-	function selectNav() {
-	  $(this).parents('ul:first').find('a').removeClass('selected').end().end().addClass('selected');
-	}
-	
-	var scrollOptions = {
-		target: $scroll,
-		items: $panels,
-		navigation: '.navigation a',
-		prev: 'img.left',
-		next: 'img.right',
-		axis: 'xy',
-		duration: 500,
-		easing: 'swing',
-		onAfter: trigger
-	};
-
-    // go find the navigation link that has this target and select the nav
-	function trigger() {
-		console.log(this); 
-	}
-
-    // apply serialScroll to the slider - we chose this plugin because it 
-    // supports// the indexed next and previous scroll along with hooking 
-    // in to our navigation.
-    $('#slider').serialScroll(scrollOptions);
-
-    // now apply localScroll to hook any other arbitrary links to trigger 
-    // the effect
-    $.localScroll(scrollOptions);
-
-   // finally, if the URL has a hash, move the slider in to position, 
-    // setting the duration to 1 because I don't want it to scroll in the
-    // very first page load.  We don't always need this, but it ensures
-    // the positioning is absolutely spot on when the pages loads.
-    scrollOptions.duration = 1;
-    $.localScroll.hash(scrollOptions);
-
-
-});
-
-
-
-   function showMarkers(event, el) {
-  	
-	    var key = el.id;
-		console.log( el );
-	
-		map.clearOverlays();
-
-console.log(  event.target.id );
-	    // Add stores markers	
-		if (key.indexOf('-') == -1) {
-
-	  	  for (s in stores_by_year[key]) {
-		  	store = stores[stores_by_year[key][s]]['store']
-		  	console.log(store['title']);
-		  	addMarker(store['lat'], store['lng'], store['title'], store['url']);
-		  }	
-		} else {
-		  for (s in stores_by_year_month[key]) {
-		  	store = stores[stores_by_year_month[key][s]]['store']
-		  	console.log(store['title']);
-		  	addMarker(store['lat'], store['lng'], store['title'], store['url']);
-		  }
-		}
-		
-	/*
-        var pt_ne = new GLatLng( borders[yr]['ne'][0], borders[yr]['ne'][1]);
-        var pt_sw = new GLatLng( borders[yr]['sw'][0], borders[yr]['sw'][1]);
-		var bounds = new GLatLngBounds( pt_sw, pt_ne );
-		map.clearOverlays();
-	    map.setCenter( bounds.getCenter(), 2);
-		//map.addOverlay(new GMarker(pt_ne));
-		//map.addOverlay(new GMarker(pt_sw));
-
-	    // Add stores markers
-		for (s in stores_by_year[yr]) {
-	      store = stores[ stores_by_year[yr][s] ]['store']
-		  console.log( store['lat']    );	
-		  var point = new GLatLng( store['lat'],store['lng']);
-		  map.addOverlay(new GMarker(point));
-		}
-*/		
-	}
-
-function addMarker(lat, lng, description, url){
-  var marker = new GMarker( new GLatLng( lat,lng),
-        {title: description});
-console.log(url);
-  GEvent.addListener(marker,'click', 
-     function() {
-
-		tb_show(description, url+"?KeepThis=true&TB_iframe=true&height=460&width=680", false)	 	
-		
-	 	//marker.openInfoWindowHtml( description )
-	 } 
-  );		  
-/*  
-  GEvent.addListener(marker,'mouseover', 
-    function() {
-		
-		marker.openInfoWindowHtml( "<div style=width:200px;height=50px;>Home</div>",
-		  { pixelOffset: new GSize(0,0)}
-		 )
-	 	$('#debug').html( description );
-
-	 } 
-  );		  
-  GEvent.addListener(marker,'mouseout', 
-    function() {
-		marker.closeInfoWindow();
-	 	$('#debug').html( '' );
-		tooltip.style.visibility="hidden"
-	 } 
-  );		  
-*/
-
-  
-  map.addOverlay( marker );
-	
-}
-
-
- // ====== This function displays the tooltip ======
-      // it can be called from an icon mousover or a side_bar mouseover
-
-
-function windowHeight() {
-	// Standard browsers (Mozilla, Safari, etc.)
-	if (self.innerHeight)
-		return self.innerHeight;
-	// IE 6
-	if (document.documentElement && document.documentElement.clientHeight)
-		return y = document.documentElement.clientHeight;
-	// IE 5
-	if (document.body)
-		return document.body.clientHeight;
-	// Just in case.
-		return 0;
-}
-function handleResize() {
-	var height = windowHeight();
-	height -= (document.getElementById('header').offsetHeight + 
-            	document.getElementById('footer').offsetHeight);
-	document.getElementById('map').style.height = height + 'px';
-	
-	$('#debug').html(height);
-
-}
-
-$(window).bind('resize', handleResize);
-
-// Slider related 
-/*
-window.onload = function () {
-    var container = $('div.module-content');
-    var ul = $('table.calendarchart', container);
-    
-    var itemsWidth = ul.innerWidth() - container.outerWidth();
-console.log(itemsWidth);    
-    $('.slider', container).slider({
-        min: 0,
-        max: itemsWidth,
-        handle: '.handle',
-        stop: function (event, ui) {
-            ul.animate({'left' : ui.value * -1}, 500);
-        },
-        slide: function (event, ui) {
-            ul.css('left', ui.value * -1);
-        }
-    });
-};
-*/
 </script>
-
-<style type="text/css">
-
-html, body {
-	background:#EDEDEC none repeat scroll 0 0; 
-	color:#2B332E;
-	font-family:Arial,sans-serif;
-	height:100%;
-	line-height:1.4;
-	width:100%;
-	margin: 0;
-	padding: 0;
-}
-
-div#container {
-	position:relative; /* needed for footer positioning*/
-	margin:0 auto; /* center, not in IE5 */
-	width:750px;
-	background:#f0f0f0;
-	
-	height:auto !important; /* real browsers */
-	height:100%; /* IE6: treaded as min-height*/
-
-	min-height:100%; /* real browsers */
-}
-
-div#header {
-	border-bottom:1px solid gray;
-}
-
-div#content {
-/* padding:1em 1em 5em; */ /* bottom padding for footer */
-}
-
-#map {
-  width:100%;
-  overflow: hidden;
-}
-
-div#footer {
-	position:absolute;
-	width:100%;
-	bottom:0; /* stick to bottom */
-	background:#ddd;
-	border-top:1px solid gray;
-}
-
-
-
-a {
-  color:#2D7BB2;
-  text-decoration: none;
-}
-a:hover {
-color:#2B332E;
-}
-
-
-
-/* CALENDAR CHARTS */
-table {
-border-collapse:collapse;
-border-spacing:0;
-}
-
-#shade {
-    background: #EDEDEC url(http://jqueryfordesigners.com/demo/images/shade.jpg) no-repeat 0 0;
-    height: 50px;
-}
-
-
-ul.navigation {
-	font-size: 0.8em;
-clear: both;	
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    padding-bottom: 7px;
-text-align: right;	
-}
-
-ul.navigation li {
-    display: inline;
-    margin-right: 10px;
-}
-
-ul.navigation a {
-    padding: 9px;
-	font-weight: bold; 
-    text-decoration: none;
-}
-
-ul.navigation a:hover {
-    background-color: #f6f6f6;
-}
-
-ul.navigation a.selected {
-    background-color: #fff;
-}
-
-ul.navigation a:focus {
-    outline: none;
-}
-
-
-.module-content {
-white-space: nowrap;
-}
-
-#slider {
-  margin: 0 auto;
-  position: relative;
-    width: 710px;  
-}
-
-.scroll {
-    height: 170px;
-    width: 710px;
-    overflow: auto;
-    overflow-x: hidden;
-    position: relative;
-    clear: left;
-    background: #FFFFFF url(http://jqueryfordesigners.com/demo/images/content_pane-gradient.gif) repeat-x scroll left bottom;
-}
-
-.scrollContainer  {
-width: 710px;
-   height: 130px; 
-   padding-top: 10px;
-
-}
-#slider h3, #slider h2 {
-clear:left;
-float:left;
-margin:0 16px 0 0;
-}
-
-#slider .maxcount {
-color:#A8B2AC;
-font-size:0.75em;
-margin:1em 0 0;
-text-align:right;
-}
-
-#slider table {
-clear:both;
-font-size:0.75em;
-margin:0;
-}
-#slider table td {
-margin:0;
-padding: 0;
-border:0 none;
-
-}
-
-#slider table .panel {
-
-padding-top:2.5em;
-}
-#slider table .panel a {
-/* color:#808C85; */
-font-weight:bold;
-
-}
-#slider table .panel a:hover {
-/* color:#2B332E; */
-}
-#slider table .day {
-border-bottom:1px solid #DBE6DF;
-border-top:1px solid #DBE6DF;
-color:#808C85;
-font-weight:bold;
-height:100px;
-padding:2px 2px 0; 
-position:relative;
-text-align:center;
-vertical-align:bottom;
-width: 2.2em;	
-}
-
-#slider table th {
-
-}
-
-#slider table .day a {
-display:block;
-height:100%;
-position:relative;
-}
-#slider table .day .label {
-bottom:-2em;
-left:0;
-position:absolute;
-text-align:center;
-width:100%;
-}
-#slider table .day .bar {
-background:#A8B2AC none repeat scroll 0 0;
-border-bottom:1px solid #A8B2AC;
-bottom:0;
-display:block;
-overflow:hidden;
-position:absolute;
-text-indent:-9999px;
-width:100%;
-}
-
-#slider table .day .bar:hover {
-background:#2D7BB2 none repeat scroll 0 0;
-border-color:#2D7BB2;
-}
-
-.scrollButtons {
-    position: absolute;
-    top: 110px;
-    cursor: pointer;
-}
-
-.scrollButtons.left {
-    left: -20px;
-}
-
-.scrollButtons.right {
-    right: -20px;
-}
-
-</style>
+<script src="../applestore.js" type="text/javascript"></script>
+<link type="text/css" href="../applestore.css" rel="stylesheet">
 </head>
 <body>
 
-
 <div id="container">
+	<div id="header">
+		<div class="module-content">
 
-<div id="header">
-	<div class="module-content">
+		<div id="slider">
+		 <h2><strong class="number"><%= @stores.size %></strong> Apple retail stores (by opening date)</h2>
+		 <p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
 
-	<div id="slider">
-	 <h2><strong class="number"><%= @stores.size %></strong> stores</h2>
-	 <p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
+		<ul class="navigation">
+	  	   <% @year_list.each do |year| %>	
+	                <li><a href="<%= '#' + year.to_s %>"><%= year %></a></li>
+		   <% end  %>
+	    </ul>	
 
-	<ul class="navigation">
-
-                <li><a href="#2001">2001</a></li>
-                <li><a href="#2002">2002</a></li>
-                <li><a href="#2003">2003</a></li>
-                <li><a href="#2004">2004</a></li>
-                <li><a href="#2005">2005</a></li>
-                <li><a href="#2006">2006</a></li>
-                <li><a href="#2007">2007</a></li>
-			    <li><a href="#2008">2008</a></li>
-          </ul>	
-
-  <div class="scroll">
-  <div class="scrollContainer">
-	<table >
-	<tbody>
-	<tr>
-<% @year_list.each do |year| %>	
-  <% (1..12).to_a.each do |month| %>
-   <td><div class='day'>
-	<% if @counts_by_year_month["#{year}-#{month}"] %>
-	<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#">
-	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
-	<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;"></span></a>
-	 <% else  %>
- 	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
-	 <span style="height: 0px;"> </span> 
-	 <% end %>
-	 </div></td>
-  <% end %>
-<% end %>	
-	</tr>	
-	<tr>
+	  <div class="scroll">
+	  <div class="scrollContainer">
+		<table >
+		<tbody>
+		<tr>
 	<% @year_list.each do |year| %>	
-	   <th class="panel"  colspan="12">
- 	   <% if @counts_by_year[year] %>	   	
-       	  <a class="year" id="<%= year %>" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="#"><%= year %></a>
-	<% else %>
-	      <span> </span>
-	<% end  %>
-	   </th>
-	<% end %>
-	</tr>
-	</tbody>
-	</table>
-	</div></div>
+	  <% (1..12).to_a.each do |month| %>
+	   <td><div class='day'>
+		<% if @counts_by_year_month["#{year}-#{month}"] %>
+		<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#">
+		 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
+		<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;"></span></a>
+		 <% else  %>
+	 	 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
+		 <span style="height: 0px;"> </span> 
+		 <% end %>
+		 </div></td>
+	  <% end %>
+	<% end %>	
+		</tr>	
+		<tr>
+		<% @year_list.each do |year| %>	
+		   <th class="panel" id="<%= year %>" colspan="12">
+	 	   <% if @counts_by_year[year] %>	   	
+	       	  <a class="year" id="year_<%= year %>" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="#"> <%= year %></a>
+		<% else %>
+		      <span> </span>
+		<% end  %>
+		   </th>
+		<% end %>
+		</tr>
+		</tbody>
+		</table>
+		</div></div>
+
+		</div>
+			</div>	
 
 	</div>
-		</div>	
-
-</div>
-<div id="content">
-	<div id="map"></div>  
-</div>	
-<div id="footer">
-	<p><span id="debug"></span>
-				This footer is absolutely positioned to bottom:0; of  #container. The padding-bottom of #content keeps me from overlapping it when the page is longer than the viewport.
-			</p>
-</div>
+	<div id="content">
+		<div id="map"></div>  
+	</div>	
+	<div id="footer">
+		<p>This apple retail store map incorporates information from many sources about location, opening date, original website of each retail store. At the Apple stores you can get help buying a new Mac, an iPod, accessories, or software. You can also get technical help for your Mac. These are typically beautiful stores in nice areas -- definitely worth visiting!
+		<span id="debug"></span></p>
+	</div>
 </div>	
 
   
