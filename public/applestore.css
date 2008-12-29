@@ -3,7 +3,6 @@ html, body {
 	background:#EDEDEC none repeat scroll 0 0; 
 	color:#2B332E;
 	font-family:Arial,sans-serif;
-	height:100%;
 	line-height:1.4;
 	width:100%;
 	margin: 0;
@@ -24,11 +23,12 @@ div#container {
 	margin:0 auto; /* center, not in IE5 */
 	width:750px;
 	background:#f0f0f0;
-	
-	height:auto !important; /* real browsers */
-	height:100%; /* IE6: treaded as min-height*/
 
-	min-height:100%; /* real browsers */
+/*	height:auto !important; */  /* real browsers */
+/*	height:100%;  */ /* IE6: treaded as min-height*/
+
+/*	min-height:100%; */ /* real browsers */
+	
 }
 
 div#header {
@@ -37,19 +37,90 @@ div#header {
 }
 
 div#content {
+ /* bottom padding for footer */
+ position: relative;
+ height: 500px;
 
- padding:1em 1em 5em;  /* bottom padding for footer */
 }
 
 #map {
-  margin: 0;
-  padding: 0;
-  width:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 500px;
+  width: 100%;
   overflow: hidden;
 }
 
+#map-wrapper {
+   position: relative;
+   height: 100%;
+}
+
+/* The default is the sidebar to show as per these styles 
+for map-wrapper, the sidebar, and the show/hide links */
+#map-wrapper { margin-right: 250px; }
+#sidebar { 
+  right: 0px; 
+  display:block;
+}
+
+#sidebar {
+     position: absolute;
+     border: 1px solid #aaa;
+     top: 0;
+     width: 240px;
+     height: 100%;
+     overflow: auto;
+}
+
+#sidebar h5 {
+	padding: 4px 6px 2px;;
+}
+
+#sidebar p {
+     margin: 10px;
+}
+
+#sidebar ul#stores {
+     list-style: none;
+     padding: 0;
+     margin: 0;
+}
+
+#sidebar ul#stores li a {
+     display: block;
+     border: 1px solid #ddd;
+     background: #eee;
+     margin: 5px;
+     padding: 4px;
+     font: 12px Helvetica, sans-serif;
+     text-decoration: none;
+     color: #444;
+}
+
+#sidebar ul#stores li.current a {
+     border: 1px solid #444;
+     border-left-width: 3px;
+     padding-left: 2px;
+}
+
+#sidebar ul#stores li a:hover {
+     background: white;
+     color: #555;
+}
+
+#sidebar ul#stores li a strong {
+     display: block;
+}
+#sidebar ul#stores li a span {
+     font-style: italic;
+     font-size: 11px;
+}
+
+
 div#footer {
-	position:absolute;
+
 	width:100%;
 	bottom:0; /* stick to bottom */
 	background:#ddd;
@@ -67,12 +138,6 @@ p {
 
 /* slider */
 
-#shade {
-    background: #EDEDEC url(http://jqueryfordesigners.com/demo/images/shade.jpg) no-repeat 0 0;
-    height: 50px;
-}
-
-
 .module-content {
    white-space: nowrap;
 }
@@ -89,7 +154,8 @@ p {
     overflow: hidden;
     position: relative;
     clear: left;
-    background: #FFFFFF url(http://jqueryfordesigners.com/demo/images/content_pane-gradient.gif) repeat-x scroll left bottom;
+
+    background-color: #FFFFFF;
  
 }
 
@@ -174,6 +240,16 @@ border-spacing:0;
 
 }
 
+#slider table th.maxcount {
+   width: 100%;
+   text-align: right;
+}
+
+#slider table span.maxcount {
+   color:#A8B2AC;
+   font-size: 10px;
+   padding-right: 20px;
+}
 
 #slider table td {
 margin:0;
@@ -242,7 +318,18 @@ border-color:#2D7BB2;
    text-align: center;
 }
 
+/* Map */
+div.store p {
+	line-height: 0.9em;
+}
 
+div.store a {
+ text-decoration: underline;
+}
+
+div.store img {
+ padding: 4px 2px 0;
+}
 
 
 /* ----------------------------------------------------------------------------------------------------------------*/

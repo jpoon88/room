@@ -83,9 +83,9 @@ $(document).ready( function() {
 
 	$("a[@class='month']").click( function(e) { 
 	   showMarkers(e, this.id); })
-	$("a[@class='year']").click( function(e) { 
+	/*$("a[@class='year']").click( function(e) { 
 	   showMarkers(e, this.id.substring(5) ); })
-	
+	*/
 
     // This is to trigger the click on 2008
     el = $('ul.navigation li:last a')
@@ -147,7 +147,38 @@ function myclick(i) {
 			   map.setCenter(new GLatLng(store['lat'], store['lng']), map.getZoom() );
 		    }
 		}	
+//	  	for (s in store_list) {
+//		  	store = stores[store_list[s]]['store'];
+//		  	addMarker(store['lat'], store['lng'], store['title'], store);
+//	    }
+	
+	    // map moveto new the marker 	
+/*	
+		if (store_list[0]) {
+			store = stores[store_list[0]]['store'];
+			location =  new GLatLng(store['lat'], store['lng']);
+		    map.setCenter(location, map.getZoom() );
+		}
+*/
+  
 
+	/*
+        var pt_ne = new GLatLng( borders[yr]['ne'][0], borders[yr]['ne'][1]);
+        var pt_sw = new GLatLng( borders[yr]['sw'][0], borders[yr]['sw'][1]);
+		var bounds = new GLatLngBounds( pt_sw, pt_ne );
+		map.clearOverlays();
+	    map.setCenter( bounds.getCenter(), 2);
+		//map.addOverlay(new GMarker(pt_ne));
+		//map.addOverlay(new GMarker(pt_sw));
+
+	    // Add stores markers
+		for (s in stores_by_year[yr]) {
+	      store = stores[ stores_by_year[yr][s] ]['store']
+		  console.log( store['lat']    );	
+		  var point = new GLatLng( store['lat'],store['lng']);
+		  map.addOverlay(new GMarker(point));
+		}
+*/		
 	}
 	
 function addMarker(lat, lng, description, store){
@@ -162,6 +193,9 @@ function addMarker(lat, lng, description, store){
              '<img src="' + store['image_url'] + '" width="210" height="160" alt="store image"/></div>'; 
   GEvent.addListener(marker,'click', 
      function() {
+
+		//tb_show('description', store['url']+"?KeepThis=true&TB_iframe=true&height=460&width=680", false)	 	
+		
 	 	marker.openInfoWindowHtml( html );
 	 } 
   );		  
@@ -172,6 +206,6 @@ function addMarker(lat, lng, description, store){
 	
 }
 
-
+// $(window).bind('resize', handleResize);
 
 

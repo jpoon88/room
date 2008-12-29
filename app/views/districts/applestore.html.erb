@@ -2,36 +2,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<title>Apple Retail Stores</title>
+<title>Apple Retail Store Map</title>
 
 <script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
-        type="text/javascript">
-</script>
+#        type="text/javascript">
+#</script>
 
 <script src="../jquery-1.2.6.min.js" type="text/javascript"></script>
+<script src="../thickbox-compressed.js" type="text/javascript"></script>
 <script src="../jquery.scrollTo-1.4.0-min.js" type="text/javascript"></script>
 <script src="../jquery.serialScroll-1.2.1-min.js" type="text/javascript"></script>
 <script src="../jquery.localscroll-1.2.6-min.js" type="text/javascript"></script>
-<script src="../thickbox-compressed.js" type="text/javascript"></script>
-<script type="text/javascript">
-var stores = <%= @stores_hash.to_json %>;
-var stores_by_year_month = <%=  @stores_by_year_month.to_json %>;
-var counts_by_year_month = <%=  @counts_by_year_month.to_json %>;
-var stores_by_year = <%=  @stores_by_year.to_json %>;
-var counts_by_year = <%=  @counts_by_year.to_json %>;
-</script>
+<script src="../applestoreall.js" type="text/javascript"></script>
 <script src="../applestore.js" type="text/javascript"></script>
 <link type="text/css" href="../applestore.css" rel="stylesheet">
 </head>
-<body>
+<body  onunload="GUnload()">
 
 <div id="container">
 	<div id="header">
 		<div class="module-content">
 
 		<div id="slider">
-		 <h2><strong class="number"><%= @stores.size %></strong> Apple retail stores (by opening date)</h2>
-		 <p class="maxcount">Peak of this chart: <%=h @max_count %> stores</p>
+		 <h2><strong class="number"><%= @stores.size %></strong> Apple retail stores (Chart by store opening date)</h2>
+		 <p class="maxcount">
+		 	<a href="/about.htm?placeValuesBeforeTB_=savedValues&TB_iframe=true&height=300&width=400" title="About this map" class="thickbox">About this map</a>
+			
+		 </p>
 
 		<ul class="navigation">
 	  	   <% @year_list.each do |year| %>	
@@ -48,7 +45,7 @@ var counts_by_year = <%=  @counts_by_year.to_json %>;
 	  <% (1..12).to_a.each do |month| %>
 	   <td><div class='day'>
 		<% if @counts_by_year_month["#{year}-#{month}"] %>
-		<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" href="#">
+		<a class="month" id="<%= "#{year}-#{month}" %>" title="<%= "#{Date::MONTHNAMES[month]}, #{year}: #{@counts_by_year_month[year.to_s+'-'+month.to_s]} total" %>" >
 		 <strong class="label"><%= Date::ABBR_MONTHNAMES[month] %></strong>
 		<span class="bar" style="height: <%= (@counts_by_year_month["#{year}-#{month}"] * 100) / @max_count %>%;"></span></a>
 		 <% else  %>
@@ -63,26 +60,46 @@ var counts_by_year = <%=  @counts_by_year.to_json %>;
 		<% @year_list.each do |year| %>	
 		   <th class="panel" id="<%= year %>" colspan="12">
 	 	   <% if @counts_by_year[year] %>	   	
-	       	  <a class="year" id="year_<%= year %>" title="<%= "#{year}: #{@counts_by_year[year]} total" %>" href="#"> <%= year %></a>
+	       	  <a class="year" id="year_<%= year %>" title="<%= "#{year}: #{@counts_by_year[year]} total" %>"> <%= year %></a>
 		<% else %>
 		      <span> </span>
 		<% end  %>
 		   </th>
 		<% end %>
 		</tr>
+		<tr><th class="maxcount" colspan="<%= 12 * @year_list.size %>">
+			<span class="maxcount">Peak of this chart: <%=h @max_count %> stores</span>
+			</th> 
+		</tr>
 		</tbody>
 		</table>
 		</div></div>
-
+<p class="adsense">
+adsense here
+</p>
 		</div>
 			</div>	
 
 	</div>
 	<div id="content">
-		<div id="map"></div>  
-	</div>	
+		<div id="map-wrapper">	
+		    <div id="map"></div>
+		</div>	
+	    <div id="sidebar">
+		    <h5>Opened in <%= @last_year_month %></h5>
+	    	<ul id='stores'>
+	   		<% @stores_by_year_month[@last_year_month].each_with_index do |d,i | %>
+	          <% s = @stores_hash[d] -%>
+			  <li id="<%= dom_id(d) %>"><a href="#"><%= s.title %> </a></li>
+			<% end %>
+	    	</ul>
+	    </div>
+	</div>
+<p class="adsense">
+	adsense here 
+</p>	
 	<div id="footer">
-		<p>This apple retail store map incorporates information from many sources about location, opening date, original website of each retail store. At the Apple stores you can get help buying a new Mac, an iPod, accessories, or software. You can also get technical help for your Mac. These are typically beautiful stores in nice areas -- definitely worth visiting!
+		<p>This Apple retail store map incorporates information from many sources about location, opening date, original website of each retail store. At the Apple stores you can get help buying a new Mac, an iPod, accessories, or software. You can also get technical help for your Mac. These are typically beautiful stores in nice areas -- definitely worth visiting!
 		<span id="debug"></span></p>
 	</div>
 </div>	

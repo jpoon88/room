@@ -12,6 +12,11 @@ class DistrictsController < ApplicationController
   end
   
   def applestore
+    # localhost:3000 API key 
+    #<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"
+    #        type="text/javascript">
+    #</script>
+   
     
     # Notes: Dynamic data use to_json on the view 
     # <script type="text/javascript">
@@ -21,9 +26,7 @@ class DistrictsController < ApplicationController
     # var stores_by_year = <%=  @stores_by_year.to_json %>;
     # var counts_by_year = <%=  @counts_by_year.to_json %>;
     
-    
-    
-    @stores = Store.find(:all, :order => "country, title")
+    @stores = Store.find(:all, :order => "title")
     @group_by_country = @stores.group_by { |s| s.country  }
     
     @stores_hash = Hash[*(@stores).collect {|v| [v.code,v]}.flatten] 
@@ -46,6 +49,9 @@ class DistrictsController < ApplicationController
       @counts_by_year[k] = v.size
     }
 
+    # recent year
+    store = Store.maximum('date_open')
+    @last_year_month = store.year.to_s + '-' + store.month.to_s
     #@count_by_year_month = Store.find_by_sql("SELECT year_open, month_open, count(*) as total FROM stores group by year_open, month_open order by year_open, month_open")
     #@max_count = @count_by_year_month.max {|b,c| b.total.to_i <=> c.total.to_i }.total.to_i
     #@max_count = (@max_count / 10.0).ceil * 10
@@ -53,24 +59,25 @@ class DistrictsController < ApplicationController
     #@group_by_year_month.map {|k,v| @group_by_year_month[k] = v[0].total.to_i }
     
     
-    render :layout => false
+     respond_to do |format|
+        format.html { render :layout => false }
+        format.js 
+      end
+
     
   end
   
   def map2
-    @stores = Store.find(:all, :order => ['date_open'])
+    @stores = Store.find(:all, :order => ['title'])
     @group = @stores.group_by { |s| s.year_open  }
    
     @stores_hash = Hash[*(@stores).collect {|v| [v.code,v]}.flatten]
     @stores_by_year = Hash.new
     @group.each { |k,v| @stores_by_year[k] = v.collect {|x| x.code }  }
-    
     list = Store.find_by_sql("select year_open as year, min(lat) as sw_lat, min(lng) as sw_lng, max(lat) as ne_lat, max(lng) as ne_lng FROM stores group by year_open")
 
     @borders = Hash.new
     list.each { |item| @borders[item.year] = { 'ne' => [item.ne_lat.to_f, item.ne_lng.to_f], 'sw' => [item.sw_lat.to_f, item.sw_lng.to_f] }   } 
-
-
 
     @group_latlng = @group.map {|k,values| values.map { |v| {'code' => v['code'], 
                  'lat'=> v['lat'], 'lng'=> v['lng'] }}  }
