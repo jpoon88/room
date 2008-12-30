@@ -11,6 +11,11 @@ class DistrictsController < ApplicationController
     
   end
   
+  def applestore2
+    applestore
+    
+  end
+
   def applestore
     # localhost:3000 API key 
     #<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAA3wAYtMpwXTd-PQv4ZpZRmhTJQa0g3IQ9GZqIMmInSLzwtGDKaBS2C5ay-CYTpdFcZWDGGOa1YCbeDA&sensor=false"

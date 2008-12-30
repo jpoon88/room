@@ -84,7 +84,11 @@ $(document).ready( function() {
 	$("a[@class='month']").click( function(e) { 
 	   showMarkers(e, this.id); })
 	$("a[@class='year']").click( function(e) { 
-	   showMarkers(e, this.id.substring(5) ); })
+	
+	   $('#nav_'+this.id.substring(5)).trigger('click');
+	   showMarkers(e, this.id.substring(5) );
+	   
+	})
 	
 
     // This is to trigger the click on 2008
