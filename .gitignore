@@ -1,4 +1,5 @@
 *.bak
+photo_*.jpg
 .DS_Store
 log/*.log
 tmp/**/*
